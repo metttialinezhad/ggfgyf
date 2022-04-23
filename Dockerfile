@@ -1,13 +1,11 @@
-FROM sandy1709/catuserbot:slim-buster
+# We're Using NaytSeyd's Special Docker
+FROM naytseyd/sedenbot:j1xlte
 
-#clonning repo 
-RUN git clone https://github.com/sandy1709/catuserbot.git /root/userbot
-#working directory 
-WORKDIR /root/userbot
+# Working Directory
+WORKDIR /DerUntergang/
 
-# Install requirements
-RUN pip3 install --no-cache-dir -r requirements.txt
+# Clone Repo
+RUN git clone -b seden https://github.com/TeamDerUntergang/Telegram-SedenUserBot.git /DerUntergang/
 
-ENV PATH="/home/userbot/bin:$PATH"
-
-CMD ["python3","-m","userbot"]
+# Run bot
+CMD ["python3", "seden.py"]

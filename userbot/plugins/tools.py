@@ -6,7 +6,6 @@ from datetime import datetime
 from urllib.parse import quote
 
 import barcode
-import qrcode
 import requests
 from barcode.writer import ImageWriter
 from bs4 import BeautifulSoup
@@ -14,6 +13,7 @@ from PIL import Image, ImageColor
 from telethon.errors.rpcerrorlist import YouBlockedUserError
 from telethon.tl.functions.contacts import UnblockRequest as unblock
 
+import qrcode
 from userbot import catub
 
 from ..Config import Config
