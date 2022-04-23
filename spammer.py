@@ -24,7 +24,7 @@ from sedenecem.core import (
 )
 
 
-@sedenify(pattern='^.tspam')
+@sedenify(pattern="^.tspam")
 def tspam(message):
     tspam = extract_args(message)
     if len(tspam) < 1:
@@ -35,16 +35,16 @@ def tspam(message):
     if not spam_allowed():
         return
 
-    for text in tspam.replace(' ', ''):
+    for text in tspam.replace(" ", ""):
         reply(message, text)
         count = increment_spam_count()
         if not count:
             break
 
-    send_log(get_translation('tspamLog'))
+    send_log(get_translation("tspamLog"))
 
 
-@sedenify(pattern='^.spam')
+@sedenify(pattern="^.spam")
 def spam(message):
     spam = extract_args(message)
     if len(spam) < 1:
@@ -61,17 +61,17 @@ def spam(message):
         return
 
     count = int(arr[0])
-    text = spam.replace(arr[0], '', 1).strip()
+    text = spam.replace(arr[0], "", 1).strip()
     for i in range(0, count):
         reply(message, text)
         limit = increment_spam_count()
         if not limit:
             break
 
-    send_log(get_translation('spamLog'))
+    send_log(get_translation("spamLog"))
 
 
-@sedenify(pattern='^.picspam')
+@sedenify(pattern="^.picspam")
 def picspam(message):
     arr = extract_args_arr(message)
     if len(arr) < 2 or not arr[0].isdigit():
@@ -90,10 +90,10 @@ def picspam(message):
         if not limit:
             break
 
-    send_log(get_translation('picspamLog'))
+    send_log(get_translation("picspamLog"))
 
 
-@sedenify(pattern='^.delayspam')
+@sedenify(pattern="^.delayspam")
 def delayspam(message):
     # Copyright (c) @ReversedPosix | 2020-2021
     delayspam = extract_args(message)
@@ -103,8 +103,8 @@ def delayspam(message):
         return
     delay = int(arr[0])
     count = int(arr[1])
-    spam_message = delayspam.replace(arr[0], '', 1)
-    spam_message = spam_message.replace(arr[1], '', 1).strip()
+    spam_message = delayspam.replace(arr[0], "", 1)
+    spam_message = spam_message.replace(arr[1], "", 1).strip()
     message.delete()
 
     if not spam_allowed():
@@ -119,7 +119,7 @@ def delayspam(message):
         if not limit:
             break
 
-    send_log(get_translation('delayspamLog'))
+    send_log(get_translation("delayspamLog"))
 
 
-HELP.update({'spammer': get_translation('spamInfo')})
+HELP.update({"spammer": get_translation("spamInfo")})

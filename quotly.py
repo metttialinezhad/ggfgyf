@@ -14,7 +14,7 @@ from sedenbot import HELP
 from sedenecem.core import PyroConversation, edit, get_translation, sedenify
 
 
-@sedenify(pattern='^.q$', compat=False)
+@sedenify(pattern="^.q$", compat=False)
 def quotly(client, message):
     reply = message.reply_to_message
     if reply and (reply.text or reply.photo or reply.sticker):
@@ -24,7 +24,7 @@ def quotly(client, message):
         return
 
     sleep(1)
-    chat = 'QuotLyBot'
+    chat = "QuotLyBot"
 
     with PyroConversation(client, chat) as conv:
         response = None
@@ -32,7 +32,7 @@ def quotly(client, message):
             conv.forward_msg(reply)
             response = conv.recv_msg()
         except YouBlockedUser:
-            edit(message, get_translation('unblockChat', ['**', '`', chat]))
+            edit(message, get_translation("unblockChat", ["**", "`", chat]))
             return
         except Exception:
 
@@ -45,4 +45,4 @@ def quotly(client, message):
     message.delete()
 
 
-HELP.update({'quotly': get_translation('quotlyInfo')})
+HELP.update({"quotly": get_translation("quotlyInfo")})

@@ -6,8 +6,9 @@ import time
 import heroku3
 import lottie
 import requests
-import spamwatch as spam_watch
 from validators.url import url
+
+import spamwatch as spam_watch
 
 from .. import *
 from ..Config import Config

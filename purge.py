@@ -21,7 +21,7 @@ from sedenecem.core import (
 )
 
 
-@sedenify(pattern='^.purge$', compat=False, admin=True)
+@sedenify(pattern="^.purge$", compat=False, admin=True)
 def purge(client, message):
     msg = message.reply_to_message
     if msg:
@@ -41,16 +41,16 @@ def purge(client, message):
         except FloodWait as e:
             sleep(e.x)
         except Exception as e:
-            edit(message, get_translation('purgeError', ['`', '**', e]))
+            edit(message, get_translation("purgeError", ["`", "**", e]))
             return
 
-    done = reply(message, get_translation('purgeResult', ['**', '`', str(count)]))
-    send_log(get_translation('purgeLog', ['**', '`', str(count)]))
+    done = reply(message, get_translation("purgeResult", ["**", "`", str(count)]))
+    send_log(get_translation("purgeLog", ["**", "`", str(count)]))
     sleep(2)
     done.delete()
 
 
-@sedenify(pattern='^.purgeme', compat=False)
+@sedenify(pattern="^.purgeme", compat=False)
 def purgeme(client, message):
     count = extract_args(message)
     if not count.isdigit():
@@ -64,14 +64,14 @@ def purgeme(client, message):
         i = i + 1
         message.delete()
 
-    smsg = reply(message, get_translation('purgeResult', ['**', '`', str(count)]))
-    send_log(get_translation('purgeLog', ['**', '`', str(count)]))
+    smsg = reply(message, get_translation("purgeResult", ["**", "`", str(count)]))
+    send_log(get_translation("purgeLog", ["**", "`", str(count)]))
     sleep(2)
     i = 1
     smsg.delete()
 
 
-@sedenify(pattern='^.del$', compat=False, admin=True)
+@sedenify(pattern="^.del$", compat=False, admin=True)
 def delete(client, message):
     msg_src = message.reply_to_message
     if msg_src:
@@ -86,6 +86,6 @@ def delete(client, message):
         edit(message, f'`{get_translation("wrongCommand")}`')
 
 
-HELP.update({'purge': get_translation('purgeInfo')})
-HELP.update({'purgeme': get_translation('purgemeInfo')})
-HELP.update({'del': get_translation('delInfo')})
+HELP.update({"purge": get_translation("purgeInfo")})
+HELP.update({"purgeme": get_translation("purgemeInfo")})
+HELP.update({"del": get_translation("delInfo")})

@@ -8,18 +8,11 @@
 #
 
 import math
-from os import remove, path
+from os import path, remove
 
 from exifread import process_file
-from fractions import Fraction
-from PIL import Image
 from sedenbot import HELP
-from sedenecem.core import (
-    download_media_wc,
-    edit,
-    get_translation,
-    sedenify,
-)
+from sedenecem.core import download_media_wc, edit, get_translation, sedenify
 
 
 @sedenify(pattern="^.exif")
@@ -97,9 +90,7 @@ def exif_data(message):
 
 def calculate_aperture(string):
     division = string.split("/")
-    return "f/%.1f" % (
-        math.sqrt(2.0) ** (int(division[0]) / int(division[1]))
-    )
+    return "f/%.1f" % (math.sqrt(2.0) ** (int(division[0]) / int(division[1])))
 
 
 def calculate_brightness(string):
@@ -114,9 +105,7 @@ def calculate_fnumber(string):
 
 def calculate_focal(string):
     division = string.split("/")
-    return "{0} mm".format(
-        str(math.floor(int(division[0]) / int(division[1])))
-    )
+    return "{0} mm".format(str(math.floor(int(division[0]) / int(division[1]))))
 
 
 def calculate_shutter(string):
@@ -146,9 +135,7 @@ def calculate_gps(coord, google_coordinate):
         minutes = int(minutes[0])
         seconds = int(seconds[0]) / int(seconds[1])
 
-    google_coordinate.append(
-        f"{hour}%C2%B0{math.floor(minutes)}'{seconds:.2f}%22"
-    )
+    google_coordinate.append(f"{hour}%C2%B0{math.floor(minutes)}'{seconds:.2f}%22")
     return f"{hour}°{math.floor(minutes)}'{seconds:.2f}\""
 
 

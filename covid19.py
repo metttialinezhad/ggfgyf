@@ -16,31 +16,31 @@ from sedenbot import HELP
 from sedenecem.core import edit, get_translation, sedenify
 
 
-@sedenify(pattern='^.covid(|19)$')
+@sedenify(pattern="^.covid(|19)$")
 def covid(message):
     try:
         req = get(
-            'https://covid19.saglik.gov.tr/',
+            "https://covid19.saglik.gov.tr/",
             headers={
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                'Accept-Language': 'tr-TR,tr;q=0.8,en-US;q=0.5,en;q=0.3',
-                'Cache-Control': 'max-age=0',
-                'Connection': 'keep-alive',
-                'Referer': 'https://covid19.saglik.gov.tr/',
-                'Upgrade-Insecure-Requests': '1',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.7113.93 Safari/537.36',
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+                "Accept-Language": "tr-TR,tr;q=0.8,en-US;q=0.5,en;q=0.3",
+                "Cache-Control": "max-age=0",
+                "Connection": "keep-alive",
+                "Referer": "https://covid19.saglik.gov.tr/",
+                "Upgrade-Insecure-Requests": "1",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.7113.93 Safari/537.36",
             },
         )
 
-        soup = BeautifulSoup(req.text, 'html.parser')
-        scripts = soup.find_all('script')
+        soup = BeautifulSoup(req.text, "html.parser")
+        scripts = soup.find_all("script")
         for script in scripts:
             turejq = str(script)
-            if 'var sondurumjson' in turejq:
+            if "var sondurumjson" in turejq:
                 result = loads(
                     sub(
-                        '(<(/|)script(.*)>|\/\/|<!\[CDATA\[|\]\]>|;|var sondurumjson =|\n|\s|var haftalikdurumjson(.*))',
-                        '',
+                        "(<(/|)script(.*)>|\/\/|<!\[CDATA\[|\]\]>|;|var sondurumjson =|\n|\s|var haftalikdurumjson(.*))",
+                        "",
                         turejq,
                     )
                 )
@@ -53,10 +53,10 @@ def covid(message):
         result = result[0]
 
     def del_dots(res):
-        return empty_check(res.replace('.', ''))
+        return empty_check(res.replace(".", ""))
 
     def empty_check(res):
-        return res if len(res.strip()) else 'N/A'
+        return res if len(res.strip()) else "N/A"
 
     sonuclar = (
         f'**{get_translation("covidData")}**\n'
@@ -79,4 +79,4 @@ def covid(message):
     edit(message, sonuclar)
 
 
-HELP.update({'covid19': get_translation('covidInfo')})
+HELP.update({"covid19": get_translation("covidInfo")})

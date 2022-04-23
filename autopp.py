@@ -23,15 +23,15 @@ from sedenecem.core import (
 )
 
 # =================== CONSTANT ===================
-KEY_AUTOPP = 'autopic'
+KEY_AUTOPP = "autopic"
 # ================================================
 
 
-@sedenify(pattern='^.autopp', compat=False)
+@sedenify(pattern="^.autopp", compat=False)
 def autopic(client, message):
     args = extract_args(message)
     autopic = KEY_AUTOPP in TEMP_SETTINGS
-    if args == 'disable':
+    if args == "disable":
         if autopic:
             del TEMP_SETTINGS[KEY_AUTOPP]
             edit(message, f'`{get_translation("autoppDisabled")}`')
@@ -47,20 +47,20 @@ def autopic(client, message):
 
     edit(message, f'`{get_translation("autoppProcess")}`')
 
-    FONT_FILE = 'sedenecem/fonts/OpenSans.ttf'
+    FONT_FILE = "sedenecem/fonts/OpenSans.ttf"
 
-    downloaded_file_name = 'oldpp.png'
-    photo = 'newpp.png'
+    downloaded_file_name = "oldpp.png"
+    photo = "newpp.png"
 
     if path.exists(downloaded_file_name):
-        LOGS.info(get_translation('autoppLog'))
+        LOGS.info(get_translation("autoppLog"))
     else:
         if AUTO_PP and len(AUTO_PP) > 0:
-            with open(downloaded_file_name, 'wb') as load:
+            with open(downloaded_file_name, "wb") as load:
                 load.write(get(AUTO_PP).content)
         else:
             try:
-                profile_photo = client.get_profile_photos('me', limit=1)
+                profile_photo = client.get_profile_photos("me", limit=1)
                 downloaded_file_name = download_media_wc(
                     profile_photo[0], downloaded_file_name
                 )
@@ -72,7 +72,7 @@ def autopic(client, message):
 
     while KEY_AUTOPP in TEMP_SETTINGS:
         try:
-            current_time = datetime.now().strftime('%H:%M')
+            current_time = datetime.now().strftime("%H:%M")
             img = Image.open(downloaded_file_name)
             drawn_text = ImageDraw.Draw(img)
             fnt = ImageFont.truetype(FONT_FILE, 70)
@@ -91,4 +91,4 @@ def autopic(client, message):
             return
 
 
-HELP.update({'autopp': get_translation('autoppInfo')})
+HELP.update({"autopp": get_translation("autoppInfo")})

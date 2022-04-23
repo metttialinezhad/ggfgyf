@@ -27,10 +27,10 @@ def blacklist_init():
         global sql
         from importlib import import_module
 
-        sql = import_module('sedenecem.sql.blacklist_sql')
+        sql = import_module("sedenecem.sql.blacklist_sql")
     except Exception as e:
         sql = None
-        LOGS.warn(get_translation('blacklistSqlLog'))
+        LOGS.warn(get_translation("blacklistSqlLog"))
         raise e
 
 
@@ -57,8 +57,8 @@ def blacklist(message):
 
     msg_removed = False
     for snip in snips:
-        regex1 = r'( |^|[^\w])'
-        regex2 = r'( |$|[^\w])'
+        regex1 = r"( |^|[^\w])"
+        regex2 = r"( |$|[^\w])"
         pattern = f"{regex1}{escape(snip)}{regex2}"
         if search(pattern, name, flags=IGNORECASE):
             try:
@@ -73,7 +73,7 @@ def blacklist(message):
         message.continue_propagation()
 
 
-@sedenify(pattern='^.addblacklist')
+@sedenify(pattern="^.addblacklist")
 def addblacklist(message):
     if not sql:
         edit(message, f'`{get_translation("nonSqlMode")}`')
@@ -87,12 +87,12 @@ def addblacklist(message):
     )
     for trigger in to_blacklist:
         sql.add_to_blacklist(message.chat.id, trigger.lower())
-    edit(message, get_translation('blacklistAddSuccess', ['**', '`', text]))
+    edit(message, get_translation("blacklistAddSuccess", ["**", "`", text]))
 
-    send_log(get_translation('blacklistLog', ['`', message.chat.id, text]))
+    send_log(get_translation("blacklistLog", ["`", message.chat.id, text]))
 
 
-@sedenify(pattern='^.showblacklist$')
+@sedenify(pattern="^.showblacklist$")
 def showblacklist(message):
     if not sql:
         edit(message, f'`{get_translation("nonSqlMode")}`')
@@ -101,12 +101,12 @@ def showblacklist(message):
     OUT_STR = f'**{get_translation("blacklistChats")}**\n'
     if len(all_blacklisted) > 0:
         for trigger in all_blacklisted:
-            OUT_STR += f'`{trigger}`\n'
+            OUT_STR += f"`{trigger}`\n"
     else:
         OUT_STR = f'**{get_translation("blankBlacklist")}**'
     if len(OUT_STR) > 4096:
         with BytesIO(str.encode(OUT_STR)) as out_file:
-            out_file.name = 'blacklist.text'
+            out_file.name = "blacklist.text"
             reply_doc(
                 message, out_file, caption=f'**{get_translation("blacklistChats")}**'
             )
@@ -115,7 +115,7 @@ def showblacklist(message):
         edit(message, OUT_STR)
 
 
-@sedenify(pattern='^.rmblacklist')
+@sedenify(pattern="^.rmblacklist")
 def rmblacklist(message):
     if not sql:
         edit(message, f'`{get_translation("nonSqlMode")}`')
@@ -131,7 +131,7 @@ def rmblacklist(message):
     for trigger in to_unblacklist:
         if sql.rm_from_blacklist(message.chat.id, trigger.lower()):
             successful += 1
-    edit(message, get_translation('blacklistRemoveSuccess', ['**', '`', text]))
+    edit(message, get_translation("blacklistRemoveSuccess", ["**", "`", text]))
 
 
-HELP.update({'blacklist': get_translation('blacklistInfo')})
+HELP.update({"blacklist": get_translation("blacklistInfo")})

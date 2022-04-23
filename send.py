@@ -27,10 +27,10 @@ def send(client, chat, text, fix_markdown=False, reply_id=None):
             )
         return
 
-    file = open('temp.txt', 'w+')
+    file = open("temp.txt", "w+")
     file.write(text)
     file.close()
-    send_doc(client, chat, 'temp.txt')
+    send_doc(client, chat, "temp.txt")
 
 
 def send_sticker(client, chat, sticker):
@@ -40,7 +40,7 @@ def send_sticker(client, chat, sticker):
         pass
 
 
-def send_doc(client, chat, doc, caption='', fix_markdown=False):
+def send_doc(client, chat, doc, caption="", fix_markdown=False):
     try:
         if len(caption) > 0 and fix_markdown:
             caption += MARKDOWN_FIX_CHAR

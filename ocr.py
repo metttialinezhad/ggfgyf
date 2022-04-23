@@ -20,28 +20,28 @@ from sedenecem.core import (
 )
 
 
-def ocr_file(filename, language='eng', overlay=False, api_key=OCR_APIKEY):
+def ocr_file(filename, language="eng", overlay=False, api_key=OCR_APIKEY):
 
     payload = {
-        'isOverlayRequired': overlay,
-        'apikey': api_key,
-        'language': language,
+        "isOverlayRequired": overlay,
+        "apikey": api_key,
+        "language": language,
     }
-    with open(filename, 'rb') as f:
+    with open(filename, "rb") as f:
         r = post(
-            'https://api.ocr.space/parse/image',
+            "https://api.ocr.space/parse/image",
             files={filename: f},
             data=payload,
         )
     return r.json()
 
 
-@sedenify(pattern=r'^.ocr')
+@sedenify(pattern=r"^.ocr")
 def ocr(message):
     if not OCR_APIKEY:
         return edit(
             message,
-            get_translation('ocrApiMissing', ['**', 'OCR Space', '`']),
+            get_translation("ocrApiMissing", ["**", "OCR Space", "`"]),
             preview=False,
         )
 
@@ -60,12 +60,12 @@ def ocr(message):
     test_file = ocr_file(downloaded_file_name, lang_code)
 
     try:
-        ParsedText = test_file['ParsedResults'][0]['ParsedText']
+        ParsedText = test_file["ParsedResults"][0]["ParsedText"]
     except BaseException:
         edit(message, f'`{get_translation("ocrError")}`')
     else:
-        edit(message, get_translation('ocrResult', ['`', ParsedText]))
+        edit(message, get_translation("ocrResult", ["`", ParsedText]))
     remove(downloaded_file_name)
 
 
-HELP.update({'ocr': get_translation('ocrInfo')})
+HELP.update({"ocr": get_translation("ocrInfo")})

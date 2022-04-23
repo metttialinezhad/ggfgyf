@@ -12,11 +12,11 @@ from sedenbot import HELP
 from sedenecem.core import edit, get_translation, parse_cmd, sedenify
 
 
-@sedenify(pattern=r'^.(un|)lock', compat=False, private=False, admin=True)
+@sedenify(pattern=r"^.(un|)lock", compat=False, private=False, admin=True)
 def lock(client, message):
-    text = (message.text or message.caption).replace(r'\s+', ' ').split(' ', 1)
+    text = (message.text or message.caption).replace(r"\s+", " ").split(" ", 1)
 
-    unlock = parse_cmd(text[0])[:2] == 'un'
+    unlock = parse_cmd(text[0])[:2] == "un"
     if len(text) < 2:
         edit(message, f"`{get_translation('wrongCommand')}`")
         return
@@ -34,38 +34,38 @@ def lock(client, message):
     adduser = None
     cpin = None
     changeinfo = None
-    if kilit == 'msg':
+    if kilit == "msg":
         msg = unlock
-        kullanim = get_translation('lockMsg')
-    elif kilit == 'media':
+        kullanim = get_translation("lockMsg")
+    elif kilit == "media":
         media = unlock
-        kullanim = get_translation('lockMedia')
-    elif kilit == 'gif':
+        kullanim = get_translation("lockMedia")
+    elif kilit == "gif":
         gif = unlock
         sticker = gif
-        kullanim = get_translation('lockGif')
-    elif kilit == 'game':
+        kullanim = get_translation("lockGif")
+    elif kilit == "game":
         gamee = unlock
-        kullanim = get_translation('lockGame')
-    elif kilit == 'inline':
+        kullanim = get_translation("lockGame")
+    elif kilit == "inline":
         ainline = unlock
-        kullanim = get_translation('lockInline')
-    elif kilit == 'web':
+        kullanim = get_translation("lockInline")
+    elif kilit == "web":
         webprev = unlock
-        kullanim = get_translation('lockWeb')
-    elif kilit == 'poll':
+        kullanim = get_translation("lockWeb")
+    elif kilit == "poll":
         gpoll = unlock
-        kullanim = get_translation('lockPoll')
-    elif kilit == 'invite':
+        kullanim = get_translation("lockPoll")
+    elif kilit == "invite":
         adduser = unlock
-        kullanim = get_translation('lockInvite')
-    elif kilit == 'pin':
+        kullanim = get_translation("lockInvite")
+    elif kilit == "pin":
         cpin = unlock
-        kullanim = get_translation('lockPin')
-    elif kilit == 'info':
+        kullanim = get_translation("lockPin")
+    elif kilit == "info":
         changeinfo = unlock
-        kullanim = get_translation('lockInformation')
-    elif kilit == 'all':
+        kullanim = get_translation("lockInformation")
+    elif kilit == "all":
         msg = unlock
         media = unlock
         gif = unlock
@@ -76,16 +76,16 @@ def lock(client, message):
         adduser = unlock
         cpin = unlock
         changeinfo = unlock
-        kullanim = get_translation('lockAll')
+        kullanim = get_translation("lockAll")
     else:
         if not kilit:
             edit(
                 message,
-                get_translation('locksUnlockNoArgs' if unlock else 'locksLockNoArgs'),
+                get_translation("locksUnlockNoArgs" if unlock else "locksLockNoArgs"),
             )
             return
         else:
-            edit(message, get_translation('lockError', ['`', kilit]))
+            edit(message, get_translation("lockError", ["`", kilit]))
             return
 
     kilitle = client.get_chat(message.chat.id)
@@ -122,11 +122,11 @@ def lock(client, message):
         edit(
             message,
             get_translation(
-                'locksUnlockSuccess' if unlock else 'locksLockSuccess', ['`', kullanim]
+                "locksUnlockSuccess" if unlock else "locksLockSuccess", ["`", kullanim]
             ),
         )
     except BaseException as e:
-        edit(message, get_translation('lockPerm', ['`', '**', str(e)]))
+        edit(message, get_translation("lockPerm", ["`", "**", str(e)]))
         return
 
 
@@ -137,4 +137,4 @@ def get_on_none(item, defval):
     return item
 
 
-HELP.update({'locks': get_translation('lockInfo')})
+HELP.update({"locks": get_translation("lockInfo")})

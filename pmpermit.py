@@ -7,21 +7,13 @@
 # All rights reserved. See COPYING, AUTHORS.
 #
 
-from re import VERBOSE
-from sedenbot import (
-    HELP,
-    LOGS,
-    PM_AUTO_BAN,
-    PM_MSG_COUNT,
-    PM_UNAPPROVED,
-    TEMP_SETTINGS,
-)
+from sedenbot import HELP, LOGS, PM_AUTO_BAN, PM_MSG_COUNT, PM_UNAPPROVED, TEMP_SETTINGS
 from sedenbot.modules.chat import is_muted
 from sedenecem.core import edit, get_translation, reply, sedenify, send_log
 from sqlalchemy.exc import IntegrityError
 
 # ========================= CONSTANTS ============================
-UNAPPROVED_MSG = PM_UNAPPROVED or get_translation('pmpermitMessage', ['`'])
+UNAPPROVED_MSG = PM_UNAPPROVED or get_translation("pmpermitMessage", ["`"])
 # =================================================================
 
 
@@ -30,10 +22,10 @@ def pmpermit_init():
         global sql
         from importlib import import_module
 
-        sql = import_module('sedenecem.sql.pm_permit_sql')
+        sql = import_module("sedenecem.sql.pm_permit_sql")
     except Exception as e:
         sql = None
-        LOGS.warn(get_translation('pmpermitSqlLog'))
+        LOGS.warn(get_translation("pmpermitSqlLog"))
         raise e
 
 
@@ -66,33 +58,37 @@ def permitpm(client, message):
             notifsoff = is_muted(-1)
 
             if not apprv and message.text != UNAPPROVED_MSG:
-                if message.chat.id in TEMP_SETTINGS['PM_LAST_MSG']:
-                    prevmsg = TEMP_SETTINGS['PM_LAST_MSG'][message.chat.id]
+                if message.chat.id in TEMP_SETTINGS["PM_LAST_MSG"]:
+                    prevmsg = TEMP_SETTINGS["PM_LAST_MSG"][message.chat.id]
                     if message.text != prevmsg:
                         for message in _find_unapproved_msg(client, message.chat.id):
                             message.delete()
-                        if TEMP_SETTINGS['PM_COUNT'][message.chat.id] < (PM_MSG_COUNT - 1):
+                        if TEMP_SETTINGS["PM_COUNT"][message.chat.id] < (
+                            PM_MSG_COUNT - 1
+                        ):
                             ret = reply(message, UNAPPROVED_MSG)
-                            TEMP_SETTINGS['PM_LAST_MSG'][message.chat.id] = ret.text
+                            TEMP_SETTINGS["PM_LAST_MSG"][message.chat.id] = ret.text
                 else:
                     ret = reply(message, UNAPPROVED_MSG)
                     if ret.text:
-                        TEMP_SETTINGS['PM_LAST_MSG'][message.chat.id] = ret.text
+                        TEMP_SETTINGS["PM_LAST_MSG"][message.chat.id] = ret.text
 
                 if notifsoff:
                     client.read_history(message.chat.id)
 
-                if message.chat.id not in TEMP_SETTINGS['PM_COUNT']:
-                    TEMP_SETTINGS['PM_COUNT'][message.chat.id] = 1
+                if message.chat.id not in TEMP_SETTINGS["PM_COUNT"]:
+                    TEMP_SETTINGS["PM_COUNT"][message.chat.id] = 1
                 else:
-                    TEMP_SETTINGS['PM_COUNT'][message.chat.id] = TEMP_SETTINGS['PM_COUNT'][message.chat.id] + 1
+                    TEMP_SETTINGS["PM_COUNT"][message.chat.id] = (
+                        TEMP_SETTINGS["PM_COUNT"][message.chat.id] + 1
+                    )
 
-                if TEMP_SETTINGS['PM_COUNT'][message.chat.id] > (PM_MSG_COUNT - 1):
+                if TEMP_SETTINGS["PM_COUNT"][message.chat.id] > (PM_MSG_COUNT - 1):
                     reply(message, f'`{get_translation("pmpermitBlock")}`')
 
                     try:
-                        del TEMP_SETTINGS['PM_COUNT'][message.chat.id]
-                        del TEMP_SETTINGS['PM_LAST_MSG'][message.chat.id]
+                        del TEMP_SETTINGS["PM_COUNT"][message.chat.id]
+                        del TEMP_SETTINGS["PM_LAST_MSG"][message.chat.id]
                     except BaseException:
                         pass
 
@@ -100,7 +96,7 @@ def permitpm(client, message):
 
                     send_log(
                         get_translation(
-                            'pmpermitLog', [message.chat.first_name, message.chat.id]
+                            "pmpermitLog", [message.chat.first_name, message.chat.id]
                         )
                     )
 
@@ -108,7 +104,7 @@ def permitpm(client, message):
 
 
 def auto_accept(client, message):
-    self_user = TEMP_SETTINGS['ME']
+    self_user = TEMP_SETTINGS["ME"]
     if message.chat.id not in [self_user.id, 777000]:
         try:
             from sedenecem.sql.pm_permit_sql import approve, is_approved
@@ -124,12 +120,10 @@ def auto_accept(client, message):
             #    and msg.text != UNAPPROVED_MSG
             #    and
 
-            if (
-                 msg.from_user.id == self_user.id
-            ):
+            if msg.from_user.id == self_user.id:
                 try:
-                    del TEMP_SETTINGS['PM_COUNT'][chat.id]
-                    del TEMP_SETTINGS['PM_LAST_MSG'][chat.id]
+                    del TEMP_SETTINGS["PM_COUNT"][chat.id]
+                    del TEMP_SETTINGS["PM_LAST_MSG"][chat.id]
                 except BaseException:
                     pass
 
@@ -138,7 +132,7 @@ def auto_accept(client, message):
                     for message in _find_unapproved_msg(client, chat.id):
                         message.delete()
                     send_log(
-                        get_translation('pmAutoAccept', [chat.first_name, chat.id])
+                        get_translation("pmAutoAccept", [chat.first_name, chat.id])
                     )
                     return True
                 except BaseException:
@@ -147,7 +141,7 @@ def auto_accept(client, message):
     return False
 
 
-@sedenify(outgoing=True, pattern='^.notifoff$')
+@sedenify(outgoing=True, pattern="^.notifoff$")
 def notifoff(message):
     try:
         from sedenecem.sql.keep_read_sql import kread
@@ -159,7 +153,7 @@ def notifoff(message):
     edit(message, f'`{get_translation("pmNotifOff")}`')
 
 
-@sedenify(outgoing=True, pattern='^.notifon$')
+@sedenify(outgoing=True, pattern="^.notifon$")
 def notifon(message):
     try:
         from sedenecem.sql.keep_read_sql import unkread
@@ -171,7 +165,7 @@ def notifon(message):
     edit(message, f'`{get_translation("pmNotifOn")}`')
 
 
-@sedenify(outgoing=True, pattern='^.approve$', compat=False)
+@sedenify(outgoing=True, pattern="^.approve$", compat=False)
 def approvepm(client, message):
     try:
         from sedenecem.sql.pm_permit_sql import approve
@@ -190,7 +184,7 @@ def approvepm(client, message):
         uid = replied_user.id
     else:
         aname = message.chat
-        if not aname.type == 'private':
+        if not aname.type == "private":
             edit(message, f'`{get_translation("pmApproveError")}`')
             return
         name0 = aname.first_name
@@ -198,8 +192,8 @@ def approvepm(client, message):
 
     try:
         approve(uid)
-        edit(message, get_translation('pmApproveSuccess', [name0, uid, '`']))
-        send_log(get_translation('pmApproveLog', [name0, uid]))
+        edit(message, get_translation("pmApproveSuccess", [name0, uid, "`"]))
+        send_log(get_translation("pmApproveLog", [name0, uid]))
         for message in _find_unapproved_msg(client, message.chat.id):
             message.delete()
     except IntegrityError:
@@ -226,7 +220,7 @@ def disapprovepm(message):
         uid = replied_user.id
     else:
         aname = message.chat
-        if not aname.type == 'private':
+        if not aname.type == "private":
             edit(message, f'`{get_translation("pmApproveError")}`')
             return
         name0 = aname.first_name
@@ -234,18 +228,18 @@ def disapprovepm(message):
 
     dissprove(uid)
 
-    edit(message, get_translation('pmDisapprove', [name0, uid, '`']))
+    edit(message, get_translation("pmDisapprove", [name0, uid, "`"]))
 
-    send_log(get_translation('pmDisapprove', [name0, uid, '`']))
+    send_log(get_translation("pmDisapprove", [name0, uid, "`"]))
 
 
 def _find_unapproved_msg(client, chat_id):
     try:
         return client.search_messages(
-            chat_id, from_user='me', limit=10, query=UNAPPROVED_MSG
+            chat_id, from_user="me", limit=10, query=UNAPPROVED_MSG
         )
     except BaseException:
         return []
 
 
-HELP.update({'pmpermit': get_translation('pmpermitInfo')})
+HELP.update({"pmpermit": get_translation("pmpermitInfo")})

@@ -31,29 +31,29 @@ CUSTOM_MSG = ALIVE_MSG or f"`{get_translation('sedenAlive')}`"
 # ============================================
 
 
-@sedenify(pattern='^.neofetch$')
+@sedenify(pattern="^.neofetch$")
 def neofetch(message):
     try:
         from subprocess import PIPE, Popen
 
         process = Popen(
-            ['neofetch', f'HOSTNAME={HOSTNAME}', f'USER={USER}', '--stdout'],
+            ["neofetch", f"HOSTNAME={HOSTNAME}", f"USER={USER}", "--stdout"],
             stdout=PIPE,
             stderr=PIPE,
         )
         result, _ = process.communicate()
-        edit(message, f'`{result.decode()}`')
+        edit(message, f"`{result.decode()}`")
     except BaseException:
         edit(message, f'`{get_translation("neofetchNotFound")}`')
 
 
-@sedenify(pattern='^.botver$')
+@sedenify(pattern="^.botver$")
 def bot_version(message):
-    if which('git'):
+    if which("git"):
         from subprocess import PIPE, Popen
 
         changes = Popen(
-            ['git', 'rev-list', '--all', '--count'],
+            ["git", "rev-list", "--all", "--count"],
             stdout=PIPE,
             stderr=PIPE,
             universal_newlines=True,
@@ -63,8 +63,8 @@ def bot_version(message):
         edit(
             message,
             get_translation(
-                'sedenShowBotVersion',
-                ['**', '`', CHANNEL, BOT_VERSION, result],
+                "sedenShowBotVersion",
+                ["**", "`", CHANNEL, BOT_VERSION, result],
             ),
             preview=False,
         )
@@ -72,24 +72,24 @@ def bot_version(message):
         edit(message, f'`{get_translation("sedenGitNotFound")}`')
 
 
-@sedenify(pattern='^.ping$')
+@sedenify(pattern="^.ping$")
 def ping(message):
     start = datetime.now()
-    edit(message, '**Pong!**')
+    edit(message, "**Pong!**")
     finish = datetime.now()
     time = (finish - start).microseconds / 1000
-    edit(message, f'**Pong!**\n`{time}ms`')
+    edit(message, f"**Pong!**\n`{time}ms`")
 
 
-@sedenify(pattern='^.alive$')
+@sedenify(pattern="^.alive$")
 def alive(message):
-    if CUSTOM_MSG.lower() == 'ecem':
+    if CUSTOM_MSG.lower() == "ecem":
         ecem(message)
         return
-    edit(message, f'{CUSTOM_MSG}')
+    edit(message, f"{CUSTOM_MSG}")
 
 
-@sedenify(pattern='^.echo')
+@sedenify(pattern="^.echo")
 def test_echo(message):
     args = extract_args(message)
     if len(args) > 0:
@@ -99,20 +99,20 @@ def test_echo(message):
         edit(message, f'`{get_translation("echoHelp")}`')
 
 
-@sedenify(pattern='^.dc$', compat=False)
+@sedenify(pattern="^.dc$", compat=False)
 def data_center(client, message):
     result = client.send(GetNearestDc())
 
     edit(
         message,
         get_translation(
-            'sedenNearestDC',
-            ['**', '`', result.country, result.nearest_dc, result.this_dc],
+            "sedenNearestDC",
+            ["**", "`", result.country, result.nearest_dc, result.this_dc],
         ),
     )
 
 
-@sedenify(pattern='^.term')
+@sedenify(pattern="^.term")
 def terminal(message):
     command = extract_args(message)
 
@@ -135,17 +135,18 @@ def terminal(message):
     result = get_translation("termNoResult")
     try:
         from sedenecem.core.misc import __status_out__
+
         _, result = __status_out__(command)
-    except BaseException as e:
+    except BaseException:
         pass
 
     if len(result) > 4096:
-        output = open('output.txt', 'w+')
+        output = open("output.txt", "w+")
         output.write(result)
         output.close()
         reply_doc(
             message,
-            'output.txt',
+            "output.txt",
             caption=f'`{get_translation("outputTooLarge")}`',
             delete_after_send=True,
         )
@@ -153,10 +154,10 @@ def terminal(message):
 
     edit(message, f'`{curruser}:~{"#" if uid == 0 else "$"} {command}\n{result}`')
 
-    send_log(get_translation('termLog', [command]))
+    send_log(get_translation("termLog", [command]))
 
 
-@sedenify(pattern='^.eval')
+@sedenify(pattern="^.eval")
 def eval(message):
     args = extract_args(message)
     if len(args) < 1:
@@ -168,31 +169,31 @@ def eval(message):
         if evaluation:
             if isinstance(evaluation, str):
                 if len(evaluation) >= 4096:
-                    file = open('output.txt', 'w+')
+                    file = open("output.txt", "w+")
                     file.write(evaluation)
                     file.close()
                     reply_doc(
                         message,
-                        'output.txt',
+                        "output.txt",
                         caption=f'`{get_translation("outputTooLarge")}`',
                         delete_after_send=True,
                     )
                     return
                 edit(
                     message,
-                    get_translation('sedenQuery', ['**', '`', args, evaluation]),
+                    get_translation("sedenQuery", ["**", "`", args, evaluation]),
                 )
         else:
             edit(
                 message,
                 get_translation(
-                    'sedenQuery', ['**', '`', args, get_translation('sedenErrorResult')]
+                    "sedenQuery", ["**", "`", args, get_translation("sedenErrorResult")]
                 ),
             )
     except Exception as err:
-        edit(message, get_translation('sedenQuery', ['**', '`', args, str(err)]))
+        edit(message, get_translation("sedenQuery", ["**", "`", args, str(err)]))
 
-    send_log(get_translation('evalLog', [args]))
+    send_log(get_translation("evalLog", [args]))
 
 
 operators = {
@@ -207,8 +208,8 @@ operators = {
 
 
 def safe_eval(expr):
-    expr = expr.lower().replace('x', '*').replace(' ', '')
-    return str(_eval(parse(expr, mode='eval').body))
+    expr = expr.lower().replace("x", "*").replace(" ", "")
+    return str(_eval(parse(expr, mode="eval").body))
 
 
 def _eval(node):
@@ -222,4 +223,4 @@ def _eval(node):
         raise TypeError(f'`{get_translation("safeEval")}`')
 
 
-HELP.update({'system': get_translation('systemInfo')})
+HELP.update({"system": get_translation("systemInfo")})

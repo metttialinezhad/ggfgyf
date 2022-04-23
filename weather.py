@@ -19,7 +19,7 @@ else:
 # ====================
 
 
-@sedenify(pattern='^.(havadurumu|w(eathe|tt)r)')
+@sedenify(pattern="^.(havadurumu|w(eathe|tt)r)")
 def havadurumu(message):
     args = extract_args(message)
 
@@ -31,21 +31,21 @@ def havadurumu(message):
     else:
         CITY = args
 
-    if ',' in CITY:
-        CITY = CITY[: CITY.find(',')].strip()
+    if "," in CITY:
+        CITY = CITY[: CITY.find(",")].strip()
 
     try:
         req = get(
-            f'http://wttr.in/{CITY}?mqT0',
-            headers={'User-Agent': 'curl/7.66.0', 'Accept-Language': SEDEN_LANG},
+            f"http://wttr.in/{CITY}?mqT0",
+            headers={"User-Agent": "curl/7.66.0", "Accept-Language": SEDEN_LANG},
         )
         data = req.text
-        if '===' in data:
+        if "===" in data:
             raise Exception
-        data = data.replace('`', '‛')
-        edit(message, f'`{data}`')
+        data = data.replace("`", "‛")
+        edit(message, f"`{data}`")
     except Exception:
         edit(message, f'`{get_translation("weatherErrorServer")}`')
 
 
-HELP.update({'weather': get_translation('infoWeather')})
+HELP.update({"weather": get_translation("infoWeather")})

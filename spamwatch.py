@@ -9,6 +9,7 @@
 
 from sedenbot import BRAIN, HELP, SPAMWATCH_KEY
 from sedenecem.core import get_translation, is_admin_myself, reply, sedenify, send_log
+
 from spamwatch import Client as SpamWatch
 
 
@@ -16,7 +17,13 @@ class SWClient:
     spamwatch_client = SpamWatch(SPAMWATCH_KEY) if SPAMWATCH_KEY else None
 
 
-@sedenify(compat=False, outgoing=False, incoming=True, disable_notify=True, disable_edited=True)
+@sedenify(
+    compat=False,
+    outgoing=False,
+    incoming=True,
+    disable_notify=True,
+    disable_edited=True,
+)
 def spamwatch_action(client, message):
     if not SWClient.spamwatch_client:
         message.continue_propagation()
@@ -30,13 +37,13 @@ def spamwatch_action(client, message):
         message.continue_propagation()
 
     if is_admin_myself(message.chat):
-        text = get_translation('spamWatchBan', [message.from_user.first_name, uid])
+        text = get_translation("spamWatchBan", [message.from_user.first_name, uid])
 
-        if 'private' == message.chat.type:
+        if "private" == message.chat.type:
             reply(message, text)
             client.block_user(uid)
         else:
-            myself = message.chat.get_member('me')
+            myself = message.chat.get_member("me")
             if myself.can_restrict_members:
                 message.chat.ban_member(uid)
                 reply(message, text)
@@ -45,4 +52,5 @@ def spamwatch_action(client, message):
 
         send_log(text)
 
-HELP.update({'spamwatch': get_translation('spamWatchInfo')})
+
+HELP.update({"spamwatch": get_translation("spamWatchInfo")})

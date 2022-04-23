@@ -36,34 +36,34 @@ def sticker_resize(photo):
         maxsize = (512, 512)
         image.thumbnail(maxsize)
 
-    temp = f'{get_download_dir()}/temp.png'
-    image.save(temp, 'PNG')
+    temp = f"{get_download_dir()}/temp.png"
+    image.save(temp, "PNG")
     return temp
 
 
 def video_convert(video):
     process = Popen(
         [
-            'ffmpeg',
-            '-i',
-            f'{video}',
-            '-vf',
-            'scale=512:512:force_original_aspect_ratio=decrease',
-            '-c:v',
-            'libvpx-vp9',
-            '-crf',
-            '30',
-            '-b:v',
-            '500k',
-            '-pix_fmt',
-            'yuv420p',
-            '-t',
-            '2.9',
-            '-an',
-            '-y',
-            f'{get_download_dir()}/temp.webm',
+            "ffmpeg",
+            "-i",
+            f"{video}",
+            "-vf",
+            "scale=512:512:force_original_aspect_ratio=decrease",
+            "-c:v",
+            "libvpx-vp9",
+            "-crf",
+            "30",
+            "-b:v",
+            "500k",
+            "-pix_fmt",
+            "yuv420p",
+            "-t",
+            "2.9",
+            "-an",
+            "-y",
+            f"{get_download_dir()}/temp.webm",
         ]
     )
     _ = process.communicate()
-    output = f'{get_download_dir()}/temp.webm'
+    output = f"{get_download_dir()}/temp.webm"
     return output

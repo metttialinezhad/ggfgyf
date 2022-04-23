@@ -17,7 +17,7 @@ def paste(message):
     if len(text) <= 6:
         return edit(message, f'`{get_translation("pasteErr")}`')
 
-    paste = text.replace('.paste ', '').encode('utf-8')
+    paste = text.replace(".paste ", "").encode("utf-8")
 
     url = "https://www.toptal.com/developers/hastebin/documents"
 
@@ -26,12 +26,12 @@ def paste(message):
             url=url,
             data=paste,
         )
-    except BaseException as e:
+    except BaseException:
         edit(message, f'`{get_translation("pasteConErr")}`')
 
     try:
         resp = r.json()
-        key = resp['key']
+        key = resp["key"]
         new_url = f"https://www.toptal.com/developers/hastebin/{key}"
         return edit(message, new_url, False)
     except BaseException as e:

@@ -22,12 +22,12 @@ from sedenecem.core import (
 )
 
 
-@sedenify(pattern='^.rbg$')
+@sedenify(pattern="^.rbg$")
 def rbg(message):
     if not RBG_APIKEY:
         return edit(
             message,
-            get_translation('rbgApiMissing', ['**', 'Remove.BG', '`']),
+            get_translation("rbgApiMissing", ["**", "Remove.BG", "`"]),
             preview=False,
         )
     reply = message.reply_to_message
@@ -38,7 +38,7 @@ def rbg(message):
         and (
             reply.photo
             or (reply.sticker and not reply.sticker.is_animated)
-            or (reply.document and 'image' in reply.document.mime_type)
+            or (reply.document and "image" in reply.document.mime_type)
         )
     ):
         edit(message, f'`{get_translation("processing")}`')
@@ -46,7 +46,7 @@ def rbg(message):
         edit(message, f'`{get_translation("rbgUsage")}`')
         return
 
-    IMG_PATH = f'{get_download_dir()}/image.png'
+    IMG_PATH = f"{get_download_dir()}/image.png"
 
     if path.exists(IMG_PATH):
         remove(IMG_PATH)
@@ -55,19 +55,19 @@ def rbg(message):
 
     if reply.sticker and not reply.sticker.is_animated:
         image = Image.open(IMG_PATH)
-        IMG_PATH = f'{get_download_dir()}/image.png'
+        IMG_PATH = f"{get_download_dir()}/image.png"
         image.save(IMG_PATH)
 
     try:
-        remove_bg = RemoveBg(RBG_APIKEY, get_translation('rbgLog'))
+        remove_bg = RemoveBg(RBG_APIKEY, get_translation("rbgLog"))
         remove_bg.remove_background_from_img_file(IMG_PATH)
-        rbg_img = f'{IMG_PATH}_no_bg.png'
+        rbg_img = f"{IMG_PATH}_no_bg.png"
         reply_doc(
-            reply, rbg_img, caption=get_translation('rbgResult'), delete_after_send=True
+            reply, rbg_img, caption=get_translation("rbgResult"), delete_after_send=True
         )
         message.delete()
     except Exception as e:
-        return edit(message, get_translation('banError', ['`', '**', e]))
+        return edit(message, get_translation("banError", ["`", "**", e]))
 
 
-HELP.update({'rbg': get_translation('rbgInfo')})
+HELP.update({"rbg": get_translation("rbgInfo")})

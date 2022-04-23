@@ -13,7 +13,7 @@ from sre_constants import error as sre_err
 from sedenbot import HELP
 from sedenecem.core import edit, get_translation, sedenify
 
-DELIMITERS = ('/', ':', '|', '_')
+DELIMITERS = ("/", ":", "|", "_")
 
 
 def separate_sed(sed_string):
@@ -25,7 +25,7 @@ def separate_sed(sed_string):
         delim = sed_string[3]
         start = counter = 4
         while counter < len(sed_string):
-            if sed_string[counter] == '\\':
+            if sed_string[counter] == "\\":
                 counter += 1
 
             elif sed_string[counter] == delim:
@@ -41,7 +41,7 @@ def separate_sed(sed_string):
 
         while counter < len(sed_string):
             if (
-                sed_string[counter] == '\\'
+                sed_string[counter] == "\\"
                 and counter + 1 < len(sed_string)
                 and sed_string[counter + 1] == delim
             ):
@@ -54,16 +54,16 @@ def separate_sed(sed_string):
 
             counter += 1
         else:
-            return replace, sed_string[start:], ''
+            return replace, sed_string[start:], ""
 
-        flags = ''
+        flags = ""
         if counter < len(sed_string):
             flags = sed_string[counter:]
         return replace, replace_with, flags.lower()
     return None
 
 
-@sedenify(pattern='^sed')
+@sedenify(pattern="^sed")
 def sed(message):
     sed_result = separate_sed(message.text or message.caption)
     textx = message.reply_to_message
@@ -86,11 +86,11 @@ def sed(message):
                 edit(message, f'`{get_translation("sedError2")}`')
                 return
 
-            if 'i' in flags and 'g' in flags:
+            if "i" in flags and "g" in flags:
                 text = sub(repl, repl_with, to_fix, flags=I).strip()
-            elif 'i' in flags:
+            elif "i" in flags:
                 text = sub(repl, repl_with, to_fix, count=1, flags=I).strip()
-            elif 'g' in flags:
+            elif "g" in flags:
                 text = sub(repl, repl_with, to_fix).strip()
             else:
                 text = sub(repl, repl_with, to_fix, count=1).strip()
@@ -98,7 +98,7 @@ def sed(message):
             edit(message, f'`{get_translation("sedLearn")}`')
             return
         if text:
-            edit(message, get_translation('sedResult', [text]))
+            edit(message, get_translation("sedResult", [text]))
 
 
-HELP.update({'sed': get_translation('sedInfo')})
+HELP.update({"sed": get_translation("sedInfo")})

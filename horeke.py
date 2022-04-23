@@ -17,7 +17,7 @@ from sedenbot import HELP, HEROKU_APPNAME, HEROKU_KEY
 from sedenecem.core import edit, get_translation, reply_doc, sedenify, send_log
 
 
-@sedenify(pattern='^.(quo|ko)ta$')
+@sedenify(pattern="^.(quo|ko)ta$")
 def dyno(message):
     if not HEROKU_KEY:
         edit(message, f"`{get_translation('notHeroku')}`")
@@ -49,13 +49,13 @@ def dyno(message):
     acc_id = heroku.account().id
 
     headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
-        'Authorization': f'Bearer {HEROKU_KEY}',
-        'Accept': 'application/vnd.heroku+json; version=3.account-quotas',
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36",
+        "Authorization": f"Bearer {HEROKU_KEY}",
+        "Accept": "application/vnd.heroku+json; version=3.account-quotas",
     }
 
     req = get(
-        f'https://api.heroku.com/accounts/{acc_id}/actions/get-quota', headers=headers
+        f"https://api.heroku.com/accounts/{acc_id}/actions/get-quota", headers=headers
     )
 
     if req.status_code != 200:
@@ -64,16 +64,16 @@ def dyno(message):
 
     json = req.json()
 
-    acc_quota = json['account_quota']
-    acc_quota_used = json['quota_used']
+    acc_quota = json["account_quota"]
+    acc_quota_used = json["quota_used"]
     acc_quota_remaining = acc_quota - acc_quota_used
     acc_quota_percent = floor(acc_quota_used / acc_quota * 100)
     acc_quota_rem_percent = 100 - acc_quota_percent
 
     def get_app_quota():
-        for app in json['apps']:
-            if app['app_uuid'] == heroku_app.id:
-                return app['quota_used']
+        for app in json["apps"]:
+            if app["app_uuid"] == heroku_app.id:
+                return app["quota_used"]
         return 0
 
     app_quota = get_app_quota()
@@ -97,36 +97,36 @@ def dyno(message):
     edit(
         message,
         get_translation(
-            'herokuQuotaInfo',
+            "herokuQuotaInfo",
             [
-                '`',
-                '**',
-                get_translation('herokuQuotaInHM', [acc_total_hrs, acc_total_min]),
-                get_translation('herokuQuotaInHM', [acc_used_hrs, acc_used_min]),
+                "`",
+                "**",
+                get_translation("herokuQuotaInHM", [acc_total_hrs, acc_total_min]),
+                get_translation("herokuQuotaInHM", [acc_used_hrs, acc_used_min]),
                 acc_quota_percent,
                 get_translation(
-                    'herokuQuotaInHM', [acc_remaining_hrs, acc_remaining_min]
+                    "herokuQuotaInHM", [acc_remaining_hrs, acc_remaining_min]
                 ),
                 acc_quota_rem_percent,
-                get_translation('herokuQuotaInHM', [app_quota_hrs, app_quota_min]),
+                get_translation("herokuQuotaInHM", [app_quota_hrs, app_quota_min]),
                 app_quota_percent,
             ],
         ),
     )
 
 
-@sedenify(pattern='^.(restart|yb)$')
+@sedenify(pattern="^.(restart|yb)$")
 def _restart(message):
     return restart(message)
 
 
-@sedenify(pattern='^.d(restart|yb)$')
+@sedenify(pattern="^.d(restart|yb)$")
 def _drestart(message):
     return restart(message, dyno=True)
 
 
 def restart(message, dyno=False):
-    send_log(get_translation('restartLog'))
+    send_log(get_translation("restartLog"))
 
     def std_off():
         try:
@@ -173,15 +173,16 @@ def restart(message, dyno=False):
     dynos[0].restart()
 
 
-@sedenify(pattern='^.(shutdown|kapat)$')
+@sedenify(pattern="^.(shutdown|kapat)$")
 def shutdown(message):
     edit(message, f'`{get_translation("shutdown")}`')
-    send_log(get_translation('shutdownLog'))
+    send_log(get_translation("shutdownLog"))
 
     def std_off():
         try:
             from sedenecem.core.misc import __status_out__
-            __status_out__(f'kill -7 {getpid()}')
+
+            __status_out__(f"kill -7 {getpid()}")
         except Exception:
             pass
 
@@ -213,10 +214,10 @@ def shutdown(message):
         std_off()
         return
 
-    heroku_app.scale_formation_process('seden', 0)
+    heroku_app.scale_formation_process("seden", 0)
 
 
-@sedenify(pattern='^.logs$')
+@sedenify(pattern="^.logs$")
 def dyno_logs(message):
     if not HEROKU_KEY:
         edit(message, f"`{get_translation('notHeroku')}`")
@@ -245,12 +246,12 @@ def dyno_logs(message):
         )
         return
 
-    filename = 'seden_heroku_log.txt'
+    filename = "seden_heroku_log.txt"
 
-    with open(filename, 'w+') as log:
+    with open(filename, "w+") as log:
         log.write(heroku_app.get_log())
 
     reply_doc(message, filename, delete_after_send=True, delete_orig=True)
 
 
-HELP.update({'heroku': get_translation('herokuInfo')})
+HELP.update({"heroku": get_translation("herokuInfo")})

@@ -12,10 +12,10 @@ from sedenbot import GENIUS_TOKEN, HELP
 from sedenecem.core import edit, extract_args, get_translation, reply_doc, sedenify
 
 
-@sedenify(pattern='^.lyrics')
+@sedenify(pattern="^.lyrics")
 def lyrics(message):
     args = extract_args(message)
-    if r'-' in args:
+    if r"-" in args:
         pass
     else:
         return edit(message, f'`{get_translation("lyricsError")}`')
@@ -25,7 +25,7 @@ def lyrics(message):
     else:
         genius = Genius(GENIUS_TOKEN)
         try:
-            args = args.split('-')
+            args = args.split("-")
             artist = args[0].strip()
             song = args[1].strip()
         except BaseException:
@@ -36,7 +36,7 @@ def lyrics(message):
         edit(message, f'`{get_translation("lyricsError2")}`')
         return
 
-    edit(message, get_translation('lyricsSearch', ['`', artist, song]))
+    edit(message, get_translation("lyricsSearch", ["`", artist, song]))
 
     try:
         songs = genius.search_song(song, artist)
@@ -44,21 +44,21 @@ def lyrics(message):
         songs = None
 
     if not songs:
-        edit(message, get_translation('lyricsNotFound', ['**', artist, song]))
+        edit(message, get_translation("lyricsNotFound", ["**", artist, song]))
         return
     if len(songs.lyrics) > 4096:
         edit(message, f'`{get_translation("lyricsOutput")}`')
-        with open('lyrics.txt', 'w+') as f:
+        with open("lyrics.txt", "w+") as f:
             f.write(
-                get_translation('lyricsQuery', ['', '', artist, song, songs.lyrics])
+                get_translation("lyricsQuery", ["", "", artist, song, songs.lyrics])
             )
-        reply_doc(message, 'lyrics.txt', delete_after_send=True)
+        reply_doc(message, "lyrics.txt", delete_after_send=True)
     else:
         edit(
             message,
-            get_translation('lyricsQuery', ['**', '`', artist, song, songs.lyrics]),
+            get_translation("lyricsQuery", ["**", "`", artist, song, songs.lyrics]),
         )
     return
 
 
-HELP.update({'lyrics': get_translation('lyricsInfo')})
+HELP.update({"lyrics": get_translation("lyricsInfo")})

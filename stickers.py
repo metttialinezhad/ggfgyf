@@ -29,16 +29,16 @@ from sedenecem.core import (
 )
 
 # ================= CONSTANT =================
-DIZCILIK = [get_translation(f'kangstr{i+1}') for i in range(0, 12)]
+DIZCILIK = [get_translation(f"kangstr{i+1}") for i in range(0, 12)]
 # ================= CONSTANT =================
 
 
-@sedenify(pattern='^.(d[ıi]zla|kang)', compat=False)
+@sedenify(pattern="^.(d[ıi]zla|kang)", compat=False)
 def kang(client, message):
-    myacc = TEMP_SETTINGS['ME']
+    myacc = TEMP_SETTINGS["ME"]
     kanger = myacc.username or myacc.first_name
     if myacc.username:
-        kanger = f'@{kanger}'
+        kanger = f"@{kanger}"
     args = extract_args(message)
 
     reply = message.reply_to_message
@@ -49,10 +49,10 @@ def kang(client, message):
     anim = False
     video = False
     media = None
-    chat = 'Stickers'
+    chat = "Stickers"
 
     if reply.photo or reply.video or reply.animation or reply.document or reply.sticker:
-        edit(message, f'`{choice(DIZCILIK)}`')
+        edit(message, f"`{choice(DIZCILIK)}`")
         anim = reply.sticker and reply.sticker.is_animated
         video = (
             reply.animation or reply.video or reply.sticker and reply.sticker.is_video
@@ -67,7 +67,7 @@ def kang(client, message):
             if (
                 reply.video
                 or reply.animation
-                or (reply.document and 'video' in reply.document.mime_type)
+                or (reply.document and "video" in reply.document.mime_type)
             ):
                 media = video_convert(media)
                 video = True
@@ -78,42 +78,40 @@ def kang(client, message):
             return
 
     if len(args) < 1:
-        args = '1'
+        args = "1"
 
-    emoji = reply.sticker.emoji if reply.sticker and reply.sticker.emoji else '🤤'
+    emoji = reply.sticker.emoji if reply.sticker and reply.sticker.emoji else "🤤"
     pack = 1
 
     for item in args.split():
         if item.isdigit():
             pack = int(item)
-            args = args.replace(item, '').strip()
+            args = args.replace(item, "").strip()
         else:
             emoji = args.strip()
 
     ptime = time()
-    pname = f'PNAME_{ptime}'
-    pnick = f'PNICK_{ptime}'
+    pname = f"PNAME_{ptime}"
+    pnick = f"PNICK_{ptime}"
 
     name_suffix = (
-        ('_anim', ' (Animated)')
+        ("_anim", " (Animated)")
         if anim
-        else ('_video', ' (Video)')
+        else ("_video", " (Video)")
         if video
-        else ('', '')
+        else ("", "")
     )
 
     TEMP_SETTINGS[pname] = (
-        PACKNAME.replace(' ', '')
+        PACKNAME.replace(" ", "")
         if PACKNAME
-        else f'a{myacc.id}_by_{myacc.username}_{pack}{name_suffix[0]}'
+        else f"a{myacc.id}_by_{myacc.username}_{pack}{name_suffix[0]}"
     )
-    TEMP_SETTINGS[f'{pname}_TEMPLATE'] = f'a{myacc.id}_by_{myacc.username}_'
-    TEMP_SETTINGS[pnick] = (
-        PACKNICK or f'{kanger}\'s UserBot pack {pack}{name_suffix[1]}'
-    )
-    TEMP_SETTINGS[f'{pnick}_TEMPLATE'] = f'{kanger}\'s UserBot pack '
+    TEMP_SETTINGS[f"{pname}_TEMPLATE"] = f"a{myacc.id}_by_{myacc.username}_"
+    TEMP_SETTINGS[pnick] = PACKNICK or f"{kanger}'s UserBot pack {pack}{name_suffix[1]}"
+    TEMP_SETTINGS[f"{pnick}_TEMPLATE"] = f"{kanger}'s UserBot pack "
 
-    limit = '50' if anim or video else '120'
+    limit = "50" if anim or video else "120"
 
     def pack_created(pname):
         try:
@@ -132,7 +130,7 @@ def kang(client, message):
         except Exception as e:
             raise e
         msg = send_recv(conv, TEMP_SETTINGS[pnick])
-        if 'Invalid pack selected.' in msg.text:
+        if "Invalid pack selected." in msg.text:
             pack += 1
             TEMP_SETTINGS[
                 pname
@@ -142,16 +140,16 @@ def kang(client, message):
             ] = f"{TEMP_SETTINGS[f'{pnick}_TEMPLATE']}{pack}{name_suffix[1]}"
             return create_new(conv, pack, pname, pnick)
         msg = send_recv(conv, media, doc=True)
-        if 'Sorry' in msg.text:
+        if "Sorry" in msg.text:
             edit(message, f'`{get_translation("stickerError")}`')
             return
         send_recv(conv, emoji)
-        send_recv(conv, '/publish')
+        send_recv(conv, "/publish")
         if anim or video:
-            send_recv(conv, f'<{TEMP_SETTINGS[pnick]}>')
-        send_recv(conv, '/skip')
+            send_recv(conv, f"<{TEMP_SETTINGS[pnick]}>")
+        send_recv(conv, "/skip")
         ret = send_recv(conv, TEMP_SETTINGS[pname])
-        while 'already taken' in ret.text:
+        while "already taken" in ret.text:
             pack += 1
             TEMP_SETTINGS[
                 pname
@@ -164,7 +162,7 @@ def kang(client, message):
 
     def add_exist(conv, pack, pname, pnick):
         try:
-            send_recv(conv, '/addsticker')
+            send_recv(conv, "/addsticker")
         except Exception as e:
             raise e
 
@@ -178,25 +176,25 @@ def kang(client, message):
             TEMP_SETTINGS[
                 pnick
             ] = f"{TEMP_SETTINGS[f'{pnick}_TEMPLATE']}{pack}{name_suffix[1]}"
-            edit(message, get_translation('packFull', ['`', '**', str(pack)]))
+            edit(message, get_translation("packFull", ["`", "**", str(pack)]))
             if pack_created(pname):
                 return add_exist(conv, pack, pname, pnick)
             else:
                 return create_new(conv, pack, pname, pnick)
 
         status = send_recv(conv, media, doc=True)
-        if ('Sorry' or ('duration is too long' or 'File is too big')) in status.text:
-            edit(message, get_translation('botError', ['`', '**', chat]))
+        if ("Sorry" or ("duration is too long" or "File is too big")) in status.text:
+            edit(message, get_translation("botError", ["`", "**", chat]))
             return
         send_recv(conv, emoji)
-        send_recv(conv, '/done')
+        send_recv(conv, "/done")
         return True
 
     with PyroConversation(client, chat) as conv:
         try:
-            send_recv(conv, '/cancel')
+            send_recv(conv, "/cancel")
         except YouBlockedUser:
-            return edit(message, get_translation('unblockChat', ['**', '`', chat]))
+            return edit(message, get_translation("unblockChat", ["**", "`", chat]))
         if pack_created(pname):
             ret = add_exist(conv, pack, pname, pnick)
             if not ret:
@@ -204,11 +202,11 @@ def kang(client, message):
         else:
             create_new(conv, pack, pname, pnick)
 
-    edit(message, get_translation('stickerAdded', ['`', TEMP_SETTINGS[pname]]))
+    edit(message, get_translation("stickerAdded", ["`", TEMP_SETTINGS[pname]]))
     del TEMP_SETTINGS[pname]
     del TEMP_SETTINGS[pnick]
-    del TEMP_SETTINGS[f'{pname}_TEMPLATE']
-    del TEMP_SETTINGS[f'{pnick}_TEMPLATE']
+    del TEMP_SETTINGS[f"{pname}_TEMPLATE"]
+    del TEMP_SETTINGS[f"{pnick}_TEMPLATE"]
 
 
 def send_recv(conv, msg, doc=False):
@@ -219,7 +217,7 @@ def send_recv(conv, msg, doc=False):
     return conv.recv_msg()
 
 
-@sedenify(pattern='^.getsticker')
+@sedenify(pattern="^.getsticker")
 def getsticker(message):
     args = extract_args(message)
     reply = message.reply_to_message
@@ -233,24 +231,24 @@ def getsticker(message):
     if reply.sticker and reply.sticker.is_animated or reply.sticker.is_video:
         video = download_media_wc(reply)
     else:
-        photo = download_media_wc(reply, f'{get_download_dir()}/sticker.png')
+        photo = download_media_wc(reply, f"{get_download_dir()}/sticker.png")
         image = Image.open(photo)
-        photo = f'{get_download_dir()}/sticker.png'
+        photo = f"{get_download_dir()}/sticker.png"
         image.save(photo)
 
     reply_doc(
         reply,
         video or photo,
-        caption=f'**Sticker ID:** `{reply.sticker.file_id}'
+        caption=f"**Sticker ID:** `{reply.sticker.file_id}"
         f'`\n**Emoji**: `{reply.sticker.emoji or get_translation("notSet")}`'
-        if args == '-v'
-        else '',
+        if args == "-v"
+        else "",
         delete_after_send=True,
     )
     message.delete()
 
 
-@sedenify(pattern='.packinfo$', compat=False)
+@sedenify(pattern=".packinfo$", compat=False)
 def packinfo(client, message):
     reply = message.reply_to_message
     if not reply:
@@ -275,21 +273,21 @@ def packinfo(client, message):
             pack_emojis.append(document_sticker.emoticon)
 
     out = get_translation(
-        'packinfoResult',
+        "packinfoResult",
         [
-            '**',
-            '`',
+            "**",
+            "`",
             get_stickerset.set.title,
             get_stickerset.set.short_name,
             get_stickerset.set.official,
             get_stickerset.set.archived,
             get_stickerset.set.animated,
             get_stickerset.set.count,
-            ' '.join(pack_emojis),
+            " ".join(pack_emojis),
         ],
     )
 
     edit(message, out)
 
 
-HELP.update({'stickers': get_translation('stickerInfo')})
+HELP.update({"stickers": get_translation("stickerInfo")})

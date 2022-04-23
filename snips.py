@@ -25,29 +25,29 @@ def snips_init():
         global sql
         from importlib import import_module
 
-        sql = import_module('sedenecem.sql.snips_sql')
+        sql = import_module("sedenecem.sql.snips_sql")
     except Exception as e:
         sql = None
-        LOGS.warn(get_translation('snipsSqlLog'))
+        LOGS.warn(get_translation("snipsSqlLog"))
         raise e
 
 
 snips_init()
 
 
-@sedenify(pattern='^.addsnip')
+@sedenify(pattern="^.addsnip")
 def save_snip(message):
     try:
         from sedenecem.sql.snips_sql import add_snip
     except AttributeError:
         edit(message, f'`{get_translation("nonSqlMode")}`')
         return
-    args = extract_args(message, markdown=True).split(' ', 1)
+    args = extract_args(message, markdown=True).split(" ", 1)
     if len(args) < 1 or len(args[0]) < 1:
         edit(message, f'`{get_translation("wrongCommand")}`')
         return
     keyword = args[0]
-    string = args[1] if len(args) > 1 else ''
+    string = args[1] if len(args) > 1 else ""
     msg = message.reply_to_message
     msg_id = None
 
@@ -62,17 +62,17 @@ def save_snip(message):
                     edit(message, f'`{get_translation("snipError")}`')
                     return
                 msg_id = msg_o.message_id
-                send_log(get_translation('snipsLog', ['`', message.chat.id, keyword]))
+                send_log(get_translation("snipsLog", ["`", message.chat.id, keyword]))
         else:
             edit(message, f'`{get_translation("wrongCommand")}`')
 
     if add_snip(keyword, string, msg_id) is False:
-        edit(message, get_translation('snipsUpdated', ['`', keyword]))
+        edit(message, get_translation("snipsUpdated", ["`", keyword]))
     else:
-        edit(message, get_translation('snipsAdded', ['`', keyword]))
+        edit(message, get_translation("snipsAdded", ["`", keyword]))
 
 
-@sedenify(pattern='^.snips$')
+@sedenify(pattern="^.snips$")
 def snip_list(message):
     try:
         from sedenecem.sql.snips_sql import get_snips
@@ -85,14 +85,14 @@ def snip_list(message):
     for a_snip in all_snips:
         if list == f'`{get_translation("noSnip")}`':
             list = f'{get_translation("snipChats")}\n'
-            list += f'`${a_snip.snip}`\n'
+            list += f"`${a_snip.snip}`\n"
         else:
-            list += f'`${a_snip.snip}`\n'
+            list += f"`${a_snip.snip}`\n"
 
     edit(message, list)
 
 
-@sedenify(pattern='^.remsnip')
+@sedenify(pattern="^.remsnip")
 def delete_snip(message):
     try:
         from sedenecem.sql.snips_sql import remove_snip
@@ -105,9 +105,9 @@ def delete_snip(message):
         return
 
     if remove_snip(name) is False:
-        edit(message, get_translation('snipsNotFound', ['`', name]))
+        edit(message, get_translation("snipsNotFound", ["`", name]))
     else:
-        edit(message, get_translation('snipsRemoved', ['**', '`', name]))
+        edit(message, get_translation("snipsRemoved", ["**", "`", name]))
 
 
 def get_snip(message):
@@ -139,4 +139,4 @@ def get_snip(message):
         pass
 
 
-HELP.update({'snips': get_translation('snipInfo')})
+HELP.update({"snips": get_translation("snipInfo")})

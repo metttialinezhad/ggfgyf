@@ -376,10 +376,10 @@ ECEM_STRINGS = [
     "Yemin ederim daha fazla sevenini görmedim jdjdkdkdkd",
 ]
 # ================= CONSTANT =================
-'''Copyright (c) @Sedenogen | 2020'''
+"""Copyright (c) @Sedenogen | 2020"""
 
 
-@sedenify(pattern='^.ecem$')
+@sedenify(pattern="^.ecem$")
 def ecemify(message):
     ecem(message)
 
@@ -389,4 +389,4 @@ def ecem(message):
     edit(message, choice(ECEM_STRINGS))
 
 
-HELP.update({'ecem': get_translation('ecemInfo')})
+HELP.update({"ecem": get_translation("ecemInfo")})

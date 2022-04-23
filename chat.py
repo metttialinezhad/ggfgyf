@@ -18,17 +18,17 @@ def chat_init():
         global sql
         from importlib import import_module
 
-        sql = import_module('sedenecem.sql.keep_read_sql')
+        sql = import_module("sedenecem.sql.keep_read_sql")
     except Exception as e:
         sql = None
-        LOGS.warn(get_translation('chatSqlLog'))
+        LOGS.warn(get_translation("chatSqlLog"))
         raise e
 
 
 chat_init()
 
 
-@sedenify(pattern='^.unmutechat$')
+@sedenify(pattern="^.unmutechat$")
 def unmutechat(message):
     try:
         from sedenecem.sql.keep_read_sql import unkread
@@ -44,7 +44,7 @@ def unmutechat(message):
     message.delete()
 
 
-@sedenify(pattern='^.mutechat$')
+@sedenify(pattern="^.mutechat$")
 def mutechat(message):
     try:
         from sedenecem.sql.keep_read_sql import kread
@@ -59,7 +59,7 @@ def mutechat(message):
     sleep(2)
     message.delete()
 
-    send_log(get_translation('chatLog', [message.chat.id]))
+    send_log(get_translation("chatLog", [message.chat.id]))
 
 
 @sedenify(incoming=True, compat=False)
@@ -68,7 +68,7 @@ def keep_read(client, message):
         message.continue_propagation()
 
     try:
-        from sedenecem.sql.keep_read_sql import is_kread
+        pass
     except BaseException:
         return
 
@@ -78,7 +78,7 @@ def keep_read(client, message):
     message.continue_propagation()
 
 
-@sedenify(pattern='^.call')
+@sedenify(pattern="^.call")
 def call_notes(message):
     try:
         from sedenbot.modules.notes import get_note
@@ -88,9 +88,9 @@ def call_notes(message):
         return
 
     args = extract_args(message)
-    if args.startswith('#'):
+    if args.startswith("#"):
         get_note(message)
-    elif args.startswith('$'):
+    elif args.startswith("$"):
         get_snip(message)
     else:
         edit(message, f"`{get_translation('wrongCommand')}`")
@@ -111,5 +111,5 @@ def is_muted(chat_id):
     return False
 
 
-HELP.update({'chat': get_translation('chatInfo')})
-HELP.update({'call': get_translation('callInfo')})
+HELP.update({"chat": get_translation("chatInfo")})
+HELP.update({"call": get_translation("callInfo")})

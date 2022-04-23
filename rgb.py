@@ -16,7 +16,7 @@ from sedenbot import HELP
 from sedenecem.core import edit, extract_args, get_translation, reply_sticker, sedenify
 
 
-@sedenify(pattern='^.rgb')
+@sedenify(pattern="^.rgb")
 def sticklet(message):
     R = randint(0, 256)
     G = randint(0, 256)
@@ -33,13 +33,13 @@ def sticklet(message):
 
     # https://docs.python.org/3/library/textwrap.html#textwrap.wrap
     sticktext = wrap(sticktext, width=10)
-    sticktext = '\n'.join(sticktext)
+    sticktext = "\n".join(sticktext)
 
-    image = Image.new('RGBA', (512, 512), (255, 255, 255, 0))
+    image = Image.new("RGBA", (512, 512), (255, 255, 255, 0))
     draw = ImageDraw.Draw(image)
     fontsize = 230
 
-    FONT_FILE = 'sedenecem/fonts/OpenSans.ttf'
+    FONT_FILE = "sedenecem/fonts/OpenSans.ttf"
 
     font = ImageFont.truetype(FONT_FILE, size=fontsize)
 
@@ -55,7 +55,7 @@ def sticklet(message):
     )
 
     image_stream = BytesIO()
-    image_stream.name = 'image.webp'
+    image_stream.name = "image.webp"
 
     def trim(im):
         bg = Image.new(im.mode, im.size, im.getpixel((0, 0)))
@@ -65,11 +65,11 @@ def sticklet(message):
         return im.crop(bbox) if bbox else im
 
     image = trim(image)
-    image.save(image_stream, 'WebP')
+    image.save(image_stream, "WebP")
     image_stream.seek(0)
 
     reply_sticker(reply or message, image_stream, delete_file=True)
     message.delete()
 
 
-HELP.update({'rgb': get_translation('rgbInfo')})
+HELP.update({"rgb": get_translation("rgbInfo")})

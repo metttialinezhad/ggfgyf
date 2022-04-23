@@ -22,11 +22,11 @@ from sedenecem.core import (
 )
 
 
-@sedenify(pattern='^.(deepf|f)ry')
+@sedenify(pattern="^.(deepf|f)ry")
 def deepfry(message):
 
-    text = (message.text or message.caption).split(' ', 1)
-    fry = parse_cmd(text[0]) == 'fry'
+    text = (message.text or message.caption).split(" ", 1)
+    fry = parse_cmd(text[0]) == "fry"
 
     try:
         frycount = int(text[1])
@@ -53,26 +53,26 @@ def deepfry(message):
     else:
         edit(
             message,
-            get_translation('deepfryNoPic', ['`', f'{"f" if fry else "deepf"}ry']),
+            get_translation("deepfryNoPic", ["`", f'{"f" if fry else "deepf"}ry']),
         )
         return
 
     # Download Media
     edit(message, f'`{get_translation("deepfryDownload")}`')
-    image_file = download_media_wc(reply, 'image.png')
+    image_file = download_media_wc(reply, "image.png")
     image = Image.open(image_file)
     remove(image_file)
 
     # Apply effect to media
-    edit(message, get_translation('deepfryApply', ['`', f'{"" if fry else "deep"}']))
+    edit(message, get_translation("deepfryApply", ["`", f'{"" if fry else "deep"}']))
     for _ in range(frycount):
         image = deepfry_media(image, fry)
 
-    fried_io = open('image.jpeg', 'w+')
-    image.save(fried_io, 'JPEG')
+    fried_io = open("image.jpeg", "w+")
+    image.save(fried_io, "JPEG")
     fried_io.close()
 
-    reply_img(reply or message, 'image.jpeg', delete_file=True)
+    reply_img(reply or message, "image.jpeg", delete_file=True)
     message.delete()
 
 
@@ -85,22 +85,22 @@ def deepfry_media(img: Image, fry: bool) -> Image:
         )
 
     # Set image format
-    img = img.copy().convert('RGB')
+    img = img.copy().convert("RGB")
     width, height = img.width, img.height
 
     temp_num = uniform(0.8, 0.9) if fry else 0.75
     img = img.resize(
-        (int(width ** temp_num), int(height ** temp_num)), resample=Image.LANCZOS
+        (int(width**temp_num), int(height**temp_num)), resample=Image.LANCZOS
     )
 
     temp_num = uniform(0.85, 0.95) if fry else 0.88
     img = img.resize(
-        (int(width ** temp_num), int(height ** temp_num)), resample=Image.BILINEAR
+        (int(width**temp_num), int(height**temp_num)), resample=Image.BILINEAR
     )
 
     temp_num = uniform(0.89, 0.98) if fry else 0.9
     img = img.resize(
-        (int(width ** temp_num), int(height ** temp_num)), resample=Image.BICUBIC
+        (int(width**temp_num), int(height**temp_num)), resample=Image.BICUBIC
     )
     img = img.resize((width, height), resample=Image.BICUBIC)
 
@@ -142,12 +142,12 @@ def check_media(reply_message):
             name = reply_message.document.file_name
             if (
                 name
-                and '.' in name
-                and name[name.find('.') + 1 :] in ['png', 'jpg', 'jpeg', 'webp']
+                and "." in name
+                and name[name.find(".") + 1 :] in ["png", "jpg", "jpeg", "webp"]
             ):
                 data = True
 
     return data
 
 
-HELP.update({'deepfry': get_translation('deepfryInfo')})
+HELP.update({"deepfry": get_translation("deepfryInfo")})

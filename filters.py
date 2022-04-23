@@ -28,10 +28,10 @@ def filters_init():
         global sql
         from importlib import import_module
 
-        sql = import_module('sedenecem.sql.filters_sql')
+        sql = import_module("sedenecem.sql.filters_sql")
     except Exception as e:
         sql = None
-        LOGS.warn(get_translation('filtersSqlLog'))
+        LOGS.warn(get_translation("filtersSqlLog"))
         raise e
 
 
@@ -78,19 +78,19 @@ def filter_incoming(message):
     message.continue_propagation()
 
 
-@sedenify(pattern='^.addfilter')
+@sedenify(pattern="^.addfilter")
 def add_filter(message):
     try:
         from sedenecem.sql.filters_sql import add_filter
     except BaseException:
         edit(message, f'`{get_translation("nonSqlMode")}`')
         return
-    args = extract_args(message, markdown=True).split(' ', 1)
+    args = extract_args(message, markdown=True).split(" ", 1)
     if len(args) < 1 or len(args[0]) < 1:
         edit(message, f'`{get_translation("wrongCommand")}`')
         return
     keyword = args[0]
-    string = args[1] if len(args) > 1 else ''
+    string = args[1] if len(args) > 1 else ""
     msg = message.reply_to_message
     msg_id = None
 
@@ -105,17 +105,17 @@ def add_filter(message):
                     edit(message, f'`{get_translation("filterError")}`')
                     return
                 msg_id = msg_o.message_id
-                send_log(get_translation('filterLog', ['`', message.chat.id, keyword]))
+                send_log(get_translation("filterLog", ["`", message.chat.id, keyword]))
         else:
             edit(message, f'`{get_translation("wrongCommand")}`')
 
     if add_filter(str(message.chat.id), keyword, string, msg_id):
-        edit(message, get_translation('filterAdded', ['**', '`', keyword]))
+        edit(message, get_translation("filterAdded", ["**", "`", keyword]))
     else:
-        edit(message, get_translation('filterUpdated', ['**', '`', keyword]))
+        edit(message, get_translation("filterUpdated", ["**", "`", keyword]))
 
 
-@sedenify(pattern='^.stop')
+@sedenify(pattern="^.stop")
 def stop_filter(message):
     try:
         from sedenecem.sql.filters_sql import remove_filter
@@ -124,12 +124,12 @@ def stop_filter(message):
         return
     filt = extract_args(message)
     if not remove_filter(message.chat.id, filt):
-        edit(message, get_translation('filterNotFound', ['**', '`', filt]))
+        edit(message, get_translation("filterNotFound", ["**", "`", filt]))
     else:
-        edit(message, get_translation('filterRemoved', ['**', '`', filt]))
+        edit(message, get_translation("filterRemoved", ["**", "`", filt]))
 
 
-@sedenify(pattern='^.stopall$')
+@sedenify(pattern="^.stopall$")
 def stop_filter_all(message):
     try:
         from sedenecem.sql.filters_sql import get_filters, remove_filter
@@ -140,10 +140,10 @@ def stop_filter_all(message):
     for filt in filters:
         remove_filter(message.chat.id, filt.keyword)
     filtwords = [i.keyword for i in filters]
-    edit(message, get_translation('filterRemoved', ['**', '`', ', '.join(filtwords)]))
+    edit(message, get_translation("filterRemoved", ["**", "`", ", ".join(filtwords)]))
 
 
-@sedenify(pattern='^.filters$')
+@sedenify(pattern="^.filters$")
 def filters(message):
     try:
         from sedenecem.sql.filters_sql import get_filters
@@ -155,11 +155,11 @@ def filters(message):
     for filt in filters:
         if transact == f'`{get_translation("noFilter")}`':
             transact = f'{get_translation("filterChats")}\n'
-            transact += '`{}`\n'.format(filt.keyword)
+            transact += "`{}`\n".format(filt.keyword)
         else:
-            transact += '`{}`\n'.format(filt.keyword)
+            transact += "`{}`\n".format(filt.keyword)
 
     edit(message, transact)
 
 
-HELP.update({'filter': get_translation('filterInfo')})
+HELP.update({"filter": get_translation("filterInfo")})

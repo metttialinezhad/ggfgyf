@@ -7,22 +7,22 @@
 # All rights reserved. See COPYING, AUTHORS.
 #
 
-from os import remove, path
+from os import path, remove
 
 from pyrogram.types import Message
-
-from .misc import MARKDOWN_FIX_CHAR, get_duration, __status_out__
 from sedenbot import LOG_VERBOSE
+
+from .misc import MARKDOWN_FIX_CHAR, __status_out__, get_duration
 
 
 def reply_img(
     message,
     photo,
-    caption='',
+    caption="",
     fix_markdown=False,
     delete_orig=False,
     delete_file=False,
-    parse='md',
+    parse="md",
 ):
     try:
         if len(caption) > 0 and fix_markdown:
@@ -39,7 +39,7 @@ def reply_img(
 def reply_audio(
     message,
     audio,
-    caption='',
+    caption="",
     duration=None,
     fix_markdown=False,
     delete_orig=False,
@@ -64,22 +64,22 @@ def reply_audio(
 def reply_video(
     message,
     video,
-    caption='',
-    duration='',
+    caption="",
+    duration="",
     thumb=None,
     fix_markdown=False,
     progress=None,
     delete_orig=False,
     delete_file=False,
-    parse='md',
+    parse="md",
 ):
     try:
         if not thumb:
-            thumb = 'downloads/thumb.png'
+            thumb = "downloads/thumb.png"
             if path.exists(thumb):
                 remove(thumb)
             out = __status_out__(
-                f'ffmpeg -i {video} -ss 00:00:01.000 -vframes 1 {thumb}'
+                f"ffmpeg -i {video} -ss 00:00:01.000 -vframes 1 {thumb}"
             )
             if LOG_VERBOSE:
                 print(out)
@@ -114,13 +114,12 @@ def reply_video(
             remove(video)
     except BaseException as e:
         raise e
-        pass
 
 
 def reply_voice(
     message,
     voice,
-    caption='',
+    caption="",
     duration=None,
     fix_markdown=False,
     delete_orig=False,
@@ -145,7 +144,7 @@ def reply_voice(
 def reply_doc(
     message,
     doc,
-    caption='',
+    caption="",
     fix_markdown=False,
     delete_orig=False,
     progress=None,

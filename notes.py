@@ -25,17 +25,17 @@ def notes_init():
         global sql
         from importlib import import_module
 
-        sql = import_module('sedenecem.sql.notes_sql')
+        sql = import_module("sedenecem.sql.notes_sql")
     except Exception as e:
         sql = None
-        LOGS.warn(get_translation('notesSqlLog'))
+        LOGS.warn(get_translation("notesSqlLog"))
         raise e
 
 
 notes_init()
 
 
-@sedenify(pattern='^.notes$')
+@sedenify(pattern="^.notes$")
 def notes(message):
     try:
         from sedenecem.sql.notes_sql import get_notes
@@ -47,25 +47,25 @@ def notes(message):
     for note in notesx:
         if reply == f'`{get_translation("noNote")}`':
             reply = f'{get_translation("notesChats")}\n'
-            reply += '`#{}`\n'.format(note.keyword)
+            reply += "`#{}`\n".format(note.keyword)
         else:
-            reply += '`#{}`\n'.format(note.keyword)
+            reply += "`#{}`\n".format(note.keyword)
     edit(message, reply)
 
 
-@sedenify(pattern=r'^.save')
+@sedenify(pattern=r"^.save")
 def save_note(message):
     try:
         from sedenecem.sql.notes_sql import add_note
     except AttributeError:
         edit(message, f'`{get_translation("nonSqlMode")}`')
         return
-    args = extract_args(message, markdown=True).split(' ', 1)
+    args = extract_args(message, markdown=True).split(" ", 1)
     if len(args) < 1 or len(args[0]) < 1:
         edit(message, f'`{get_translation("wrongCommand")}`')
         return
     keyword = args[0]
-    string = args[1] if len(args) > 1 else ''
+    string = args[1] if len(args) > 1 else ""
     msg = message.reply_to_message
     msg_id = None
 
@@ -80,17 +80,17 @@ def save_note(message):
                     edit(message, f'`{get_translation("noteError")}`')
                     return
                 msg_id = msg_o.message_id
-                send_log(get_translation('notesLog', ['`', message.chat.id, keyword]))
+                send_log(get_translation("notesLog", ["`", message.chat.id, keyword]))
         else:
             edit(message, f'`{get_translation("wrongCommand")}`')
 
     if add_note(str(message.chat.id), keyword, string, msg_id) is False:
-        edit(message, get_translation('notesUpdated', ['`', keyword]))
+        edit(message, get_translation("notesUpdated", ["`", keyword]))
     else:
-        edit(message, get_translation('notesAdded', ['`', keyword]))
+        edit(message, get_translation("notesAdded", ["`", keyword]))
 
 
-@sedenify(pattern=r'^.clear')
+@sedenify(pattern=r"^.clear")
 def clear_note(message):
     try:
         from sedenecem.sql.notes_sql import rm_note
@@ -100,9 +100,9 @@ def clear_note(message):
 
     notename = extract_args(message)
     if rm_note(message.chat.id, notename) is False:
-        edit(message, get_translation('notesNotFound', ['`', notename]))
+        edit(message, get_translation("notesNotFound", ["`", notename]))
     else:
-        edit(message, get_translation('notesRemoved', ['**', '`', notename]))
+        edit(message, get_translation("notesRemoved", ["**", "`", notename]))
 
 
 def get_note(message):
@@ -134,4 +134,4 @@ def get_note(message):
         pass
 
 
-HELP.update({'notes': get_translation('notesInfo')})
+HELP.update({"notes": get_translation("notesInfo")})

@@ -14,7 +14,7 @@ from sedenbot import HELP
 from sedenecem.core import edit, extract_args, get_translation, sedenify
 
 
-@sedenify(pattern='^.github')
+@sedenify(pattern="^.github")
 def github(message):
     args = extract_args(message)
 
@@ -23,13 +23,13 @@ def github(message):
         return
 
     try:
-        user_info = get(f'https://api.github.com/users/{args}')
+        user_info = get(f"https://api.github.com/users/{args}")
         json = loads(user_info.text)
     except BaseException:
         edit(message, f'`{get_translation("gitError")}`')
         return
 
-    login = json.get('login', None)
+    login = json.get("login", None)
     if not login:
         edit(message, f'`{get_translation("gitUserNotFound")}`')
         return
@@ -40,29 +40,29 @@ def github(message):
             return defval
         return ret
 
-    user_id = json.get('id', -1)
+    user_id = json.get("id", -1)
 
     NULL_TEXT = f'{get_translation("gitNull")}'
 
-    name = return_defval_onnull('name', NULL_TEXT)
-    acc_type = return_defval_onnull('type', 'User')
-    company = return_defval_onnull('company', NULL_TEXT)
-    blog = return_defval_onnull('blog', NULL_TEXT)
-    location = return_defval_onnull('location', NULL_TEXT)
-    email = return_defval_onnull('email', NULL_TEXT)
-    bio = return_defval_onnull('bio', NULL_TEXT)
-    twitter = return_defval_onnull('twitter_username', NULL_TEXT)
-    repo_count = json.get('public_repos', 0)
-    gist_count = json.get('public_gists', 0)
-    followers = json.get('followers', 0)
-    following = json.get('following', 0)
-    created = json.get('created_at', NULL_TEXT)
-    updated = json.get('updated_at', NULL_TEXT)
+    name = return_defval_onnull("name", NULL_TEXT)
+    acc_type = return_defval_onnull("type", "User")
+    company = return_defval_onnull("company", NULL_TEXT)
+    blog = return_defval_onnull("blog", NULL_TEXT)
+    location = return_defval_onnull("location", NULL_TEXT)
+    email = return_defval_onnull("email", NULL_TEXT)
+    bio = return_defval_onnull("bio", NULL_TEXT)
+    twitter = return_defval_onnull("twitter_username", NULL_TEXT)
+    repo_count = json.get("public_repos", 0)
+    gist_count = json.get("public_gists", 0)
+    followers = json.get("followers", 0)
+    following = json.get("following", 0)
+    created = json.get("created_at", NULL_TEXT)
+    updated = json.get("updated_at", NULL_TEXT)
 
     repos = None
 
     try:
-        repo_info = get(f'https://api.github.com/users/{args}/repos')
+        repo_info = get(f"https://api.github.com/users/{args}/repos")
         json = loads(repo_info.text)
         repos = []
         for item in json:
@@ -71,14 +71,14 @@ def github(message):
         pass
 
     def format_info(key, value):
-        return f'**{key}:** `{value}`\n'
+        return f"**{key}:** `{value}`\n"
 
     def get_repos():
         if not repos or len(repos) < 1:
             return f'`{get_translation("gitRepo")}`'
-        out = ''
+        out = ""
         for i in repos:
-            out += f'{i}\n'
+            out += f"{i}\n"
         return out
 
     edit(
@@ -100,8 +100,8 @@ def github(message):
                 format_info(get_translation("gitFollowers"), followers)
                 + format_info(get_translation("gitFollowing"), following)
             )
-            if acc_type == 'User'
-            else ''
+            if acc_type == "User"
+            else ""
         )
         + format_info(get_translation("gitCreationDate"), created)
         + format_info(get_translation("gitDateOfUpdate"), updated)
@@ -110,4 +110,4 @@ def github(message):
     )
 
 
-HELP.update({'git': get_translation('gitInfo')})
+HELP.update({"git": get_translation("gitInfo")})

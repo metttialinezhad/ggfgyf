@@ -25,13 +25,13 @@ from sedenbot.modules.horeke import restart
 from sedenecem.core import edit, extract_args, get_translation, sedenify
 
 
-@sedenify(pattern='^.env', compat=False)
+@sedenify(pattern="^.env", compat=False)
 def manage_env(client, message):
-    action = extract_args(message).split(' ', 1)
+    action = extract_args(message).split(" ", 1)
 
-    if action[0] == 'list':
+    if action[0] == "list":
         pass
-    elif len(action) < 2 or action[0] not in ['get', 'set', 'rem', 'copy', 'move']:
+    elif len(action) < 2 or action[0] not in ["get", "set", "rem", "copy", "move"]:
         edit(message, f"`{get_translation('wrongCommand')}`")
         return
 
@@ -61,8 +61,8 @@ def manage_env(client, message):
 
     reload_env()
 
-    if action[0] == 'set':
-        items = action[1].split(' ', 1)
+    if action[0] == "set":
+        items = action[1].split(" ", 1)
 
         if (
             len(items) < 2
@@ -81,11 +81,11 @@ def manage_env(client, message):
         else:
             set_local_env(key, value)
 
-        edit(message, get_translation('envSetSuccess', ['`', '**', key]))
+        edit(message, get_translation("envSetSuccess", ["`", "**", key]))
         sleep(2)
         restart(client, message)
-    elif action[0] == 'get':
-        items = action[1].split(' ', 1)
+    elif action[0] == "get":
+        items = action[1].split(" ", 1)
 
         if len(items[0]) < 1 or items[0].upper() in ENV_RESTRICTED_KEYS:
             edit(message, f"`{get_translation('wrongCommand')}`")
@@ -98,12 +98,12 @@ def manage_env(client, message):
         elif not heroku_mode and (value := environ.get(items[0], None)):
             pass
         else:
-            edit(message, get_translation('envNotFound', ['`', '**', items[0]]))
+            edit(message, get_translation("envNotFound", ["`", "**", items[0]]))
             return
 
-        edit(message, get_translation('envGetValue', ['`', '**', items[0], value]))
-    elif action[0] == 'rem':
-        items = action[1].split(' ', 1)
+        edit(message, get_translation("envGetValue", ["`", "**", items[0], value]))
+    elif action[0] == "rem":
+        items = action[1].split(" ", 1)
 
         if len(items[0]) < 1 or items[0].upper() in ENV_RESTRICTED_KEYS:
             edit(message, f"`{get_translation('wrongCommand')}`")
@@ -116,14 +116,14 @@ def manage_env(client, message):
         elif not heroku_mode and (value := environ.get(items[0], None)):
             unset_local_env(items[0])
         else:
-            edit(message, get_translation('envNotFound', ['`', '**', items[0]]))
+            edit(message, get_translation("envNotFound", ["`", "**", items[0]]))
             return
 
-        edit(message, get_translation('envRemSuccess', ['`', '**', items[0]]))
+        edit(message, get_translation("envRemSuccess", ["`", "**", items[0]]))
         sleep(2)
         restart(client, message)
-    elif action[0] in ['copy', 'move']:
-        items = action[1].split(' ', 1)
+    elif action[0] in ["copy", "move"]:
+        items = action[1].split(" ", 1)
 
         if (
             len(items) < 2
@@ -143,7 +143,7 @@ def manage_env(client, message):
         elif not heroku_mode and (value := environ.get(items[0], None)):
             pass
         else:
-            edit(message, get_translation('envNotFound', ['`', '**', items[0]]))
+            edit(message, get_translation("envNotFound", ["`", "**", items[0]]))
             return
 
         if heroku_mode:
@@ -151,38 +151,38 @@ def manage_env(client, message):
         else:
             set_local_env(items[1], value)
 
-        if action[0] == 'move':
+        if action[0] == "move":
             if heroku_mode and items[0] in heroku_env:
                 del heroku_env[items[0]]
             elif not heroku_mode and (value := environ.get(items[0], None)):
                 unset_local_env(items[0])
             edit(
                 message,
-                get_translation('envMoveSuccess', ['`', '**', items[0], items[1]]),
+                get_translation("envMoveSuccess", ["`", "**", items[0], items[1]]),
             )
             sleep(2)
             restart(client, message)
             return
 
         edit(
-            message, get_translation('envCopySuccess', ['`', '**', items[0], items[1]])
+            message, get_translation("envCopySuccess", ["`", "**", items[0], items[1]])
         )
         sleep(2)
         restart(client, message)
-    elif action[0] == 'list':
-        out = ''
+    elif action[0] == "list":
+        out = ""
         if heroku_mode:
             horeke = heroku_env.to_dict()
             for i in horeke.keys():
                 if i not in ENV_RESTRICTED_KEYS:
                     out += f'%1•%1  %2{i.replace("%", "½")}%2\n'
         else:
-            keys = dotenv_values('config.env').keys()
+            keys = dotenv_values("config.env").keys()
             keys = sorted([x for x in keys if x.upper() not in ENV_RESTRICTED_KEYS])
             for i in keys:
                 out += f'%1•%1  %2{i.replace("%", "½")}%2\n'
 
-        edit(message, get_translation('envListKeys', ['**', '`', out]))
+        edit(message, get_translation("envListKeys", ["**", "`", out]))
 
 
-HELP.update({'env': get_translation('envInfo')})
+HELP.update({"env": get_translation("envInfo")})

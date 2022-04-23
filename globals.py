@@ -19,19 +19,19 @@ def globals_init():
         global sql, sql2
         from importlib import import_module
 
-        sql = import_module('sedenecem.sql.gban_sql')
-        sql2 = import_module('sedenecem.sql.gmute_sql')
+        sql = import_module("sedenecem.sql.gban_sql")
+        sql2 = import_module("sedenecem.sql.gmute_sql")
     except Exception as e:
         sql = None
         sql2 = None
-        LOGS.warn(get_translation('globalsSqlLog'))
+        LOGS.warn(get_translation("globalsSqlLog"))
         raise e
 
 
 globals_init()
 
 
-@sedenify(pattern='^.gban', compat=False)
+@sedenify(pattern="^.gban", compat=False)
 def gban_user(client, message):
     args = extract_args(message)
     reply = message.reply_to_message
@@ -59,8 +59,7 @@ def gban_user(client, message):
     if user.id in BRAIN:
         return edit(
             message,
-            get_translation(
-                'brainError', ['`', '**', user.first_name, user.id]),
+            get_translation("brainError", ["`", "**", user.first_name, user.id]),
         )
 
     try:
@@ -69,8 +68,7 @@ def gban_user(client, message):
         sql.gban(user.id)
         edit(
             message,
-            get_translation(
-                'gbanResult', ['**', user.first_name, user.id, '`']),
+            get_translation("gbanResult", ["**", user.first_name, user.id, "`"]),
         )
         try:
             common_chats = client.get_common_chats(user.id)
@@ -79,13 +77,13 @@ def gban_user(client, message):
         except BaseException:
             pass
         sleep(1)
-        send_log(get_translation('gbanLog', [user.first_name, user.id, '`']))
+        send_log(get_translation("gbanLog", [user.first_name, user.id, "`"]))
     except Exception as e:
-        edit(message, get_translation('banError', ['`', '**', e]))
+        edit(message, get_translation("banError", ["`", "**", e]))
         return
 
 
-@sedenify(pattern='^.(ung|gun)ban', compat=False)
+@sedenify(pattern="^.(ung|gun)ban", compat=False)
 def ungban_user(client, message):
     args = extract_args(message)
     reply = message.reply_to_message
@@ -123,20 +121,22 @@ def ungban_user(client, message):
 
         def find_member(dialog):
             try:
-                return (dialog.chat.get_member(user.id)
+                return (
+                    dialog.chat.get_member(user.id)
                     and dialog.chat.get_member(user.id).restricted_by
-                    and dialog.chat.get_member(user.id).restricted_by.id == me_id)
+                    and dialog.chat.get_member(user.id).restricted_by.id == me_id
+                )
             except BaseException:
                 return False
 
         try:
             dialogs = client.iter_dialogs()
-            me_id = TEMP_SETTINGS['ME'].id
+            me_id = TEMP_SETTINGS["ME"].id
             chats = [
                 dialog.chat
                 for dialog in dialogs
                 if (
-                    'group' in dialog.chat.type
+                    "group" in dialog.chat.type
                     and find_me(dialog)
                     and find_member(dialog)
                 )
@@ -147,15 +147,14 @@ def ungban_user(client, message):
             pass
         edit(
             message,
-            get_translation(
-                'unbanResult', ['**', user.first_name, user.id, '`']),
+            get_translation("unbanResult", ["**", user.first_name, user.id, "`"]),
         )
     except Exception as e:
-        edit(message, get_translation('banError', ['`', '**', e]))
+        edit(message, get_translation("banError", ["`", "**", e]))
         return
 
 
-@sedenify(pattern='^.listgban$')
+@sedenify(pattern="^.listgban$")
 def gbanlist(message):
     users = sql.gbanned_users()
     if not users:
@@ -164,7 +163,7 @@ def gbanlist(message):
     count = 0
     for i in users:
         count += 1
-        gban_list += f'**{count} -** `{i.sender}`\n'
+        gban_list += f"**{count} -** `{i.sender}`\n"
     return edit(message, gban_list)
 
 
@@ -181,7 +180,7 @@ def gban_check(client, message):
     message.continue_propagation()
 
 
-@sedenify(pattern='^.gmute', compat=False)
+@sedenify(pattern="^.gmute", compat=False)
 def gmute_user(client, message):
     args = extract_args(message)
     reply = message.reply_to_message
@@ -209,8 +208,7 @@ def gmute_user(client, message):
     if user.id in BRAIN:
         return edit(
             message,
-            get_translation(
-                'brainError', ['`', '**', user.first_name, user.id]),
+            get_translation("brainError", ["`", "**", user.first_name, user.id]),
         )
 
     try:
@@ -219,8 +217,7 @@ def gmute_user(client, message):
         sql2.gmute(user.id)
         edit(
             message,
-            get_translation(
-                'gmuteResult', ['**', user.first_name, user.id, '`']),
+            get_translation("gmuteResult", ["**", user.first_name, user.id, "`"]),
         )
         try:
             common_chats = client.get_common_chats(user.id)
@@ -229,13 +226,13 @@ def gmute_user(client, message):
         except BaseException:
             pass
         sleep(1)
-        send_log(get_translation('gmuteLog', [user.first_name, user.id, '`']))
+        send_log(get_translation("gmuteLog", [user.first_name, user.id, "`"]))
     except Exception as e:
-        edit(message, get_translation('banError', ['`', '**', e]))
+        edit(message, get_translation("banError", ["`", "**", e]))
         return
 
 
-@sedenify(pattern='^.ungmute', compat=False)
+@sedenify(pattern="^.ungmute", compat=False)
 def ungmute_user(client, message):
     args = extract_args(message)
     reply = message.reply_to_message
@@ -272,15 +269,14 @@ def ungmute_user(client, message):
             pass
         edit(
             message,
-            get_translation('unmuteResult', [
-                            '**', user.first_name, user.id, '`']),
+            get_translation("unmuteResult", ["**", user.first_name, user.id, "`"]),
         )
     except Exception as e:
-        edit(message, get_translation('banError', ['`', '**', e]))
+        edit(message, get_translation("banError", ["`", "**", e]))
         return
 
 
-@sedenify(pattern='^.listgmute$')
+@sedenify(pattern="^.listgmute$")
 def gmutelist(message):
     users = sql2.gmuted_users()
     if not users:
@@ -289,7 +285,7 @@ def gmutelist(message):
     count = 0
     for i in users:
         count += 1
-        gmute_list += f'**{count} -** `{i.sender}`\n'
+        gmute_list += f"**{count} -** `{i.sender}`\n"
     return edit(message, gmute_list)
 
 
@@ -309,4 +305,4 @@ def gmute_check(client, message):
     message.continue_propagation()
 
 
-HELP.update({'globals': get_translation('globalsInfo')})
+HELP.update({"globals": get_translation("globalsInfo")})
