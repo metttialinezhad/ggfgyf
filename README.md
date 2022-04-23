@@ -1,60 +1,60 @@
-# CatUserbot
-A simple Telegram userbot based on Telethon .
-![catuserbot logo](https://telegra.ph/file/4860c8e1a5a56d0616b79.png)
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fsandy1709%2Fcatuserbot&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://github.com/TgCatUB/catuserbot)
-[![CodeFactor](https://www.codefactor.io/repository/github/TgCatUB/catuserbot/badge?&style=flat-square)](https://www.codefactor.io/repository/github/TgCatUB/catuserbot)
-[![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green?&style=flat-square)](https://GitHub.com/TgCatUB/catuserbot/graphs/commit-activity) 
-![Repo Size](https://img.shields.io/github/repo-size/TgCatUB/catuserbot?&style=flat-square&logo=github)
-[![GitHub license](https://img.shields.io/github/license/TgCatUB/catuserbot?&style=flat-square&logo=github)](https://github.com/TgCatUB/catuserbot/blob/master/LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/TgCatUB/catuserbot?&style=flat-square&logo=github)](https://github.com/TgCatUB/catuserbot/issues)
-[![PR Open](https://img.shields.io/github/issues-pr/TgCatUB/catuserbot?&style=flat-square&logo=github)](https://github.com/TgCatUB/catuserbot/pulls)
-[![PR Closed](https://img.shields.io/github/issues-pr-closed/TgCatUB/catuserbot?&style=flat-square&logo=github)](https://github.com/TgCatUB/catuserbot/pulls?q=is:closed)
-[![GitHub contributors](https://img.shields.io/github/contributors/TgCatUB/catuserbot?&style=flat-square&logo=github)](https://GitHub.com/TgCatUB/catuserbot/graphs/contributors/)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/TgCatUB/catuserbot?&style=flat-square&logo=github)](https://github.com/TgCatUB/catuserbot/graphs/commit-activity)
-[![GitHub forks](https://img.shields.io/github/forks/TgCatUB/catuserbot?&style=flat-square&logo=github)](https://github.com/TgCatUB/catuserbot/fork)
-[![GitHub stars](https://img.shields.io/github/stars/TgCatUB/catuserbot?&style=flat-square&logo=github)](https://github.com/TgCatUB/catuserbot/stargazers)
+Seden UserBot
+==
 
+![GitHub repo size](https://img.shields.io/github/repo-size/TeamDerUntergang/Telegram-SedenUserBot?color=brightgreen)
+![GitHub](https://img.shields.io/github/license/TeamDerUntergang/Telegram-SedenUserBot?color=red)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+Telegram Python Bot running on Python3 with a Postgresql Sqlalchemy database. It is an modular and simple to use bot.
 
-## How to deploy catuserbot
-### Heroku Deploy
-  - [![Deploy To Heroku](https://www.herokucdn.com/deploy/button.svg)](https://github.com/TgCatUB/nekopack)
-
-### Self host
-  - [check this](https://catuserbot.gitbook.io/catuserbot/tutorial/self-host)
-  
-## Support
-   <a href="https://t.me/catuserbot17"><img src="https://img.shields.io/badge/Channel%20Support%3F-yes-green?&style=flat-square?&logo=telegram" width=220px></a></p>
-   <a href="https://t.me/catuserbot_support"><img src="https://img.shields.io/badge/Group%20Support%3F-yes-green?&style=flat-square?&logo=telegram" width=220px></a></p>
-   
-## Inspiration
-   - [X-tra-Telegram](https://github.com/Dark-Princ3/X-tra-Telegram)
-   - [Uniborg](https://github.com/SpEcHiDe/UniBorg) & [Uniborg fork](https://github.com/ravana69/PornHub)
-   - Nana-Remix
-   - [Userge-X](https://github.com/code-rgb/USERGE-X/)
-   
-## Disclaimer
-
+```c
+#include <std/disclaimer.h>
+/**
+    Your Telegram account may be banned.
+    I'm not responsible for misuse of bot, responsibility belongs entirely to user.
+    This bot is maintained for fun as well as managing groups efficiently.
+    If you think you will have fun by spamming groups, you are wrong.
+    In case of any spam ban, if you come and write that my account has been banned,
+    I'll just laugh at you.
+/**
 ```
-              YOU ARE FOREWARNED
-Your Telegram account may get banned.   
-Catuserbot or we are not responsible for your account, 
-This bot is intended for the purpose of having fun with some fun commands 
-and group management with some helpfull commands.
+## Run Bot
+```bash
+# Clone repo
+git clone https://github.com/TeamDerUntergang/Telegram-SedenUserBot.git
+cd Telegram-SedenUserBot
 
-If  you ended up spamming groups, getting reported left and right, 
-and you ended up in being fight with Telegram 
-and at the end Telegram Team deleted your account. DON'T BLAME US.
+# Install pip dependencies
+pip3 install -r requirements.txt
 
-No personal support will be provided / We won't spoon feed you. 
-If you need help ask in our support group 
-and we or our friends will try to help you.
+# Generate session from session.py (skip if there is already)
+python3 session.py
 
-Thanks for using our bot 😺
+# Create config.env and fill variables
+mv sample_config.env config.env
+
+# Run bot
+python3 seden.py
 ```
+### Nix/NixOS
+Just type `nix-shell` command in bot folder.
+
+## Heroku
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/TeamDerUntergang/Telegram-SedenUserBot/tree/seden)
+
+If you have any requests & complaints & suggestions, you can join our [support group](https://t.me/SedenUserBotSupport) or please contact us through a [GitHub issue](https://github.com/TeamDerUntergang/Telegram-SedenUserBot/issues).
+
+Please go to our [GitHub.io](https://teamderuntergang.github.io/installation.html) page for installation instructions! Questions asked without reading the instruction will not be answered.
 
 ## Credits
-   - Special thanks to [LonamiWebs](https://github.com/LonamiWebs/Telethon/) for Telethon library.
-   - To all devs of these [Userbots](https://github.com/TgCatUB/catuserbot/tree/bugs#inspiration)
-   - Finally to all [contributors of Catuserbot](https://github.com/TgCatUB/catuserbot/graphs/contributors)
+*   [@NaytSeyd](https://github.com/NaytSeyd) - Founder
+*   [@frknkrc44](https://github.com/frknkrc44) - Operator
+*   [@Sedenogen](https://github.com/ciyanogen) - Co-Founder
+*   [@Delivrance](https://github.com/pyrogram/pyrogram) - Pyrogram Library
+*   [@Skittles9823](https://github.com/skittles9823) - Memes
+*   [@RaphielGang](https://github.com/raphielgang) - Other Modules
+*   [All Contributors](https://github.com/TeamDerUntergang/Telegram-SedenUserBot/graphs/contributors)
+
+## License
+
+This project is licensed under the [AGPL-3](https://www.gnu.org/licenses/agpl-3.0.html).
